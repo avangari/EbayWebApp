@@ -1,29 +1,38 @@
+/* 
+* Naren Nagaragappa
+* Akshay Vangari 
+* CS 144 - Project 1
+*/
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class ComputeSHA{
-	static String SHA(byte[] byteArray) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+public class ComputeSHA
+{
+	static String SHA(byte[] byteArray) throws NoSuchAlgorithmException, UnsupportedEncodingException
+	{
 		MessageDigest m = MessageDigest.getInstance("SHA1");
 		byte[] output = m.digest(byteArray);
 		
 		StringBuilder s = new StringBuilder();
-		for(byte b : output){
-			s.append(String.format("%02x", b));
-			
+		for(byte b : output)
+		{
+			s.append(String.format("%02x", b));	
 		}
 		return s.toString();
-		
-		
 	}
-	public static void main(String[] args){
+
+	public static void main(String[] args)
+	{
 		FileInputStream fileInputStream = null;
 		File file  = new File(args[0]);
 		byte[] byteArray = new byte[(int)file.length()];
 		
-		try{
+		try
+		{
 			fileInputStream = new FileInputStream(file);
 			fileInputStream.read(byteArray);
 			fileInputStream.close();
@@ -33,6 +42,5 @@ public class ComputeSHA{
 			e.printStackTrace();
 		}
 	}
-
 }
 
