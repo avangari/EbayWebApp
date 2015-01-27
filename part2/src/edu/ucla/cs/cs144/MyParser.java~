@@ -189,93 +189,12 @@ class MyParser {
         System.out.println(root.getNodeName());
         
         
-        //createCategories(root);
-        createItems(root);
+        createCategories(root);
+        
         /**************************************************************/
         
     }
-    /**********************************************/
-    /* to create the items load file*/
- public static void createItems(Element root){
-    	
-    	StringBuilder str = new StringBuilder("");
-    	int i=1;
-    	
-    	Element[] items = getElementsByTagNameNR(root,"Item");
-    	for(Element e : items){
-    		str.append(e.getAttribute("ItemID")+columnSeparator);
-    		str.append(getElementTextByTagNameNR(e,"Name")+columnSeparator);
-    		str.append(getElementTextByTagNameNR(e,"Started")+columnSeparator);
-    		str.append(getElementTextByTagNameNR(e,"Ends")+columnSeparator);
-    		str.append( strip ( getElementTextByTagNameNR(e,"Currently") ) + columnSeparator);
-    		str.append( strip ( getElementTextByTagNameNR(e,"First_Bid") ) + columnSeparator);
-    		/******* if the Buy price is specified, use it***/
-    		if(getElementTextByTagNameNR(e,"Buy_Price") != ""){
-    		str.append( strip ( getElementTextByTagNameNR(e,"Buy_Price") ) + columnSeparator);
-    		}
-    		else 
-    			str.append("\\N"+columnSeparator);
-    		/********************************************/
-    		str.append(getElementTextByTagNameNR(e,"Number_of_Bids")+columnSeparator);
-    		
-    		String seller_id = getElementByTagNameNR(e,"Seller").getAttribute("UserID");
-    		str.append(seller_id+columnSeparator);
-    		
-    		
-    		
-    		
-    		
-    		//Getting the latitude and longitude
-    		String latitude = getElementByTagNameNR(e,"Location").getAttribute("Latitude");
-    		if(latitude != "")
-    			str.append(latitude+columnSeparator);
-    		else 
-    			str.append("\\N"+columnSeparator);
-    		
-    		String longitude = getElementByTagNameNR(e,"Location").getAttribute("Longitude");
-    		if(longitude != "")
-    			str.append(longitude+columnSeparator);
-    		else 
-    			str.append("\\N"+columnSeparator);
-    		
-    		
-    		
-    		//description
-    		try{
-    		String desc = getElementByTagNameNR(e,"Description").getFirstChild().getNodeValue(); 
-    		//Check for the description length and cut it down
-    		if(desc.length()>4000){
-    			String desc1 = desc.substring(0, 4000);
-    			str.append(desc1+"\n");
-    		}
-    		else	
-    			str.append(desc+"\n");
-    		}
-    		catch(NullPointerException n){
-    			str.append("\\N"+"\n");
-    		}
-    		
-    		
-    		
-    		
-    		
-    	}
-    	
-    	
-    	FileWriter f;
-		try {
-			f = new FileWriter("/home/naren/items.csv");
-			
-			f.write(str.toString());
-			f.flush();
-	    	f.close();
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-    	 
-    }
-  
+    
     /*******************************************************/
     // to create the load file for the categories table
     public static void createCategories(Element root) {
@@ -294,8 +213,8 @@ class MyParser {
     	
     	FileWriter f;
 		try {
-			f = new FileWriter("/home/naren/categories.csv");
-			
+			f = new FileWriter("/home/naren/categories.csv",true);
+			str.append("hi");
 			f.write(str.toString());
 			f.flush();
 	    	f.close();
