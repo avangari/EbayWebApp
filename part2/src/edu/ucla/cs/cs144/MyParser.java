@@ -45,6 +45,7 @@ import org.xml.sax.ErrorHandler;
 
 class MyParser {
     
+    private static HashMap<String, String> allUsers = new HashMap();
     static final String columnSeparator = "|*|";
     static DocumentBuilder builder;
     
@@ -345,7 +346,7 @@ class MyParser {
         Element[] bids;
         Element seller, bid, currBidder;
         String sellerUserID, bidderID, sellerRating, bidderRating, 
-                sellerLocation, bidderLocation, sellerCountry, bidderCountry;
+                sellerLocation, bidderLocation, sellerCountry, bidderCountry, temp;
         
         sellerLocation = getElementText(getElementByTagNameNR(item, "Location"));
         sellerCountry = getElementText(getElementByTagNameNR(item, "Country"));
@@ -353,6 +354,7 @@ class MyParser {
         sellerUserID = seller.getAttribute("UserID");
         sellerRating = seller.getAttribute("SellerRating");
         
+        addToMap(sellerUserID, sellerRating, sellerLocation, sellerCountry, true);
         // Write to file/load the seller information
         
         bid = getElementByTagNameNR(item, "Bid");
@@ -365,8 +367,41 @@ class MyParser {
             bidderRating = currBidder.getAttribute("Rating");
             bidderLocation = getElementTextByTagNameNR(currBidder, "Location");
             bidderCountry = getElementTextByTagNameNR(currBidder, "Country");
+            addToMap(bidderID, bidderRating, bidderLocation, bidderCountry, false);
             
             // Write to file/load the bidder information 
+        }
+    }
+    
+    public static void addToMap(String userID, String rating, String location, String country, boolean isSeller)
+    {
+        String temp = "";
+        if(!allUsers.containsKey(userID))
+        {
+            if(isSeller)
+                temp = userID+"|"+rating+"|NULL|"+location+"|"+country;
+            else
+                temp = userID+"|NULL|"+rating+"|"+location+"|"+country;
+             
+            allUsers.put(userID, temp);
+        }
+        else
+        {
+            String value = allUsers.get(userID);
+            String[] data = value.split("|");
+            if(data[2].compareToIgnoreCase("NULL") == 0 || data[1].compareToIgnoreCase("NULL") == 0)
+            {
+                if(data[2].compareToIgnoreCase("NULL") == 0)
+                    data[2] = rating;
+                else
+                    data[1] = rating;
+                
+                for(String s : data)
+                {
+                    temp += (s+"|");
+                }
+                allUsers.put(userID, temp);
+            }
         }
     }
     
