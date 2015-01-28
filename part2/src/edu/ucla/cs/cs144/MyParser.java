@@ -307,6 +307,68 @@ class MyParser {
     	
     }
     /*******************************************************************/
+
+    // changes xml date to yyyy-MM-dd HH:mm:ss
+    public static String changeTimeFormat(String t) throws ParseException
+    {
+        DateFormat xmlDate = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
+        DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return newDate.format(xmlDate.parse(t));
+    }
+
+    public static void createBids(Element item) throws ParseException
+    {
+        String itemID;
+        Element bids; 
+        Element[] allBids;
+        int numOfBids;
+
+        bids = getElementByTagNameNR(item, "Bids");
+        allBids = getElementsByTagNameNR(bids, "Bid");
+        itemID = item.getAttribute("ItemID");
+        numOfBids = allBids.length;
+
+        for(Element e : allBids)
+        {
+            Element currBidder = getElementByTagNameNR(e, "Bidder");
+            String currBidderUserID = currBidder.getAttribute("UserID");
+            String currBidTime = changeTimeFormat(getElementTextByTagNameNR(e, "Time"));
+            String bidAmount = strip(getElementTextByTagNameNR(e, "Amount"));
+            System.out.println(currBidderUserID + " " + currBidTime + " " + bidAmount);
+            
+            // Write to file/call load function here
+        }
+    }
+
+    public static void createUsers(Element item)
+    {
+        Element[] bids;
+        Element seller, bid, currBidder;
+        String sellerUserID, bidderID, sellerRating, bidderRating, 
+                sellerLocation, bidderLocation, sellerCountry, bidderCountry;
+        
+        sellerLocation = getElementText(getElementByTagNameNR(item, "Location"));
+        sellerCountry = getElementText(getElementByTagNameNR(item, "Country"));
+        seller = getElementByTagNameNR(item, "Seller");
+        sellerUserID = seller.getAttribute("UserID");
+        sellerRating = seller.getAttribute("SellerRating");
+        
+        // Write to file/load the seller information
+        
+        bid = getElementByTagNameNR(item, "Bid");
+        bids = getElementsByTagNameNR(bid, "Bids");
+        
+        for(Element e : bids)
+        {
+            currBidder = getElementByTagNameNR(e, "Bidder");
+            bidderID = currBidder.getAttribute("UserID");
+            bidderRating = currBidder.getAttribute("Rating");
+            bidderLocation = getElementTextByTagNameNR(currBidder, "Location");
+            bidderCountry = getElementTextByTagNameNR(currBidder, "Country");
+            
+            // Write to file/load the bidder information 
+        }
+    }
     
     public static void main (String[] args) {
         if (args.length == 0) {
