@@ -25,9 +25,16 @@
 
 package edu.ucla.cs.cs144;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,16 +42,16 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.ErrorHandler;
 
 
 class MyParser {
-    
+	private static HashMap<String, String> allUsers = new HashMap();
     static final String columnSeparator = "|*|";
     static DocumentBuilder builder;
     
@@ -190,7 +197,29 @@ class MyParser {
         
         
         //createCategories(root);
-        createItems(root);
+        //createItems(root);
+        
+        Element[] items = getElementsByTagNameNR(root,"Item");
+    	for(Element e : items){
+    		createBids(e);
+    		createUsers(e);
+    	}
+    	StringBuilder str = new StringBuilder("");
+    	for(String userID : allUsers.keySet()){
+    		String s = allUsers.get(userID);
+    		str.append(s+"\n");
+    	}
+    	FileWriter f;
+		try {
+			f = new FileWriter("/home/naren/users.csv");
+			
+			f.write(str.toString());
+			f.flush();
+	    	f.close();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
         /**************************************************************/
         
     }
@@ -205,8 +234,16 @@ class MyParser {
     	for(Element e : items){
     		str.append(e.getAttribute("ItemID")+columnSeparator);
     		str.append(getElementTextByTagNameNR(e,"Name")+columnSeparator);
-    		str.append(getElementTextByTagNameNR(e,"Started")+columnSeparator);
-    		str.append(getElementTextByTagNameNR(e,"Ends")+columnSeparator);
+    		
+    		//change time format to SQl insertion
+    		try{
+    			str.append(changeTimeFormat(getElementTextByTagNameNR(e,"Started"))+columnSeparator);
+        		str.append(changeTimeFormat(getElementTextByTagNameNR(e,"Ends"))+columnSeparator);
+    		}
+    		catch(ParseException t){
+    			System.out.println(t);
+    		}
+    		
     		str.append( strip ( getElementTextByTagNameNR(e,"Currently") ) + columnSeparator);
     		str.append( strip ( getElementTextByTagNameNR(e,"First_Bid") ) + columnSeparator);
     		/******* if the Buy price is specified, use it***/
@@ -300,7 +337,7 @@ class MyParser {
 			f.flush();
 	    	f.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
     	
@@ -308,7 +345,139 @@ class MyParser {
     }
     /*******************************************************************/
     
-    public static void main (String[] args) {
+ // changes xml date to yyyy-MM-dd HH:mm:ss
+       public static String changeTimeFormat(String t) throws ParseException
+        {
+            DateFormat xmlDate = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
+            DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return newDate.format(xmlDate.parse(t));
+        }
+    
+        public static void createBids(Element item)
+        {
+            String itemID;
+            Element bids; 
+            Element[] allBids;
+            int numOfBids;
+            StringBuilder str = new StringBuilder("");
+            bids = getElementByTagNameNR(item, "Bids");
+            allBids = getElementsByTagNameNR(bids, "Bid");
+            itemID = item.getAttribute("ItemID");
+            numOfBids = allBids.length;
+            try{
+            
+            for(Element e : allBids)
+            {
+                Element currBidder = getElementByTagNameNR(e,"Bidder");
+                String currBidderUserID = currBidder.getAttribute("UserID");
+                String currBidTime = changeTimeFormat(getElementTextByTagNameNR(e, "Time"));
+                String bidAmount = strip(getElementTextByTagNameNR(e, "Amount"));
+                
+                str.append(itemID+columnSeparator+currBidderUserID+columnSeparator+currBidTime+columnSeparator+bidAmount);
+                str.append("\n");
+                
+               
+                
+
+            }
+            }
+            catch(ParseException t){
+            	System.out.println(t);
+            }
+            // Write to file/call load function here
+
+        	FileWriter f;
+    		try {
+    			f = new FileWriter("/home/naren/bids.csv",true);
+    			
+    			f.write(str.toString());
+    			f.flush();
+    	    	f.close();
+    		} catch (IOException e) {
+    			
+    			e.printStackTrace();
+    		}
+        }
+    
+       // CREATE LOAD FILE FOR USERS
+        public static void createUsers(Element item)
+        {
+            Element[] bids;
+            Element seller, bid, currBidder;
+            String sellerUserID, bidderID, sellerRating, bidderRating,sellerLocation, bidderLocation, sellerCountry, bidderCountry, temp;
+            
+            sellerLocation = getElementText(getElementByTagNameNR(item, "Location"));
+            sellerCountry = getElementText(getElementByTagNameNR(item, "Country"));
+            seller = getElementByTagNameNR(item, "Seller");
+            sellerUserID = seller.getAttribute("UserID");
+            sellerRating = seller.getAttribute("SellerRating");
+            
+            addToMap(sellerUserID, sellerRating, sellerLocation, sellerCountry, true);
+            // Write to file/load the seller information
+            try{
+            	bid = getElementByTagNameNR(item, "Bid");
+                bids = getElementsByTagNameNR(bid, "Bids");
+            }
+            catch(NullPointerException t){
+            	return;
+            }
+            
+            
+            for(Element e : bids)
+            {
+                currBidder = getElementByTagNameNR(e, "Bidder");
+                bidderID = currBidder.getAttribute("UserID");
+                bidderRating = currBidder.getAttribute("Rating");
+                try{
+                bidderLocation = getElementTextByTagNameNR(currBidder, "Location");
+                bidderCountry = getElementTextByTagNameNR(currBidder, "Country");
+                }
+                catch(NullPointerException t){
+                	bidderLocation = "\\N";
+                	bidderCountry = "\\N";
+                }
+                addToMap(bidderID, bidderRating, bidderLocation, bidderCountry, false);
+                
+                // Write to file/load the bidder information 
+            }
+            
+            
+        }
+        
+        public static void addToMap(String userID, String rating, String location, String country, boolean isSeller)
+            {
+                String temp = "";
+                if(!allUsers.containsKey(userID))
+                {
+                    if(isSeller)
+                        temp = userID+columnSeparator+rating+columnSeparator+"\\N"+columnSeparator+location+columnSeparator+country;
+                    else
+                        temp = userID+columnSeparator+"\\N"+columnSeparator+rating+columnSeparator+location+columnSeparator+country;
+                     
+                    allUsers.put(userID, temp);
+                }
+                else
+                {
+                    String value = allUsers.get(userID);
+                    String[] data = value.split("|\\*|");
+                    if(data[2].compareToIgnoreCase("\\N") == 0 || data[1].compareToIgnoreCase("\\N") == 0)
+                    {
+                        if(data[2].compareToIgnoreCase("\\N") == 0)
+                            data[2] = rating;
+                        else
+                            data[1] = rating;
+                        
+                        for(String s : data)
+                        {
+                            temp += (s+columnSeparator);
+                        }
+                        allUsers.put(userID, temp);
+                    }
+                }
+           }
+        
+        
+        public static void main (String[] args) {
         if (args.length == 0) {
             System.out.println("Usage: java MyParser [file] [file] ...");
             System.exit(1);
@@ -338,3 +507,4 @@ class MyParser {
         }
     }
 }
+
