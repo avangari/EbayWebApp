@@ -196,12 +196,12 @@ class MyParser {
         
         
         
-        createCategories(root);
-        createItems(root);
+  //      createCategories(root);
+//        createItems(root);
         
         Element[] items = getElementsByTagNameNR(root,"Item");
     	for(Element e : items){
-    		createBids(e);
+    		//createBids(e);
     		createUsers(e);
     	}
     	
@@ -401,7 +401,7 @@ class MyParser {
 
         seller = getElementByTagNameNR(item, "Seller");
         sellerUserID = seller.getAttribute("UserID");
-        sellerRating = seller.getAttribute("SellerRating");
+        sellerRating = seller.getAttribute("Rating");
 
         addToMap(sellerUserID, sellerRating, "\\N", "\\N", true);
         // Write to file/load the seller information
@@ -455,7 +455,7 @@ class MyParser {
                     else
                         data[1] = rating;
                     
-                    if(data[3].compareToIgnoreCase("\\N") == 0 || data[4].compareToIgnoreCase("\\N") == 0)
+                    if(data[3].compareToIgnoreCase("\\N") == 0 && data[4].compareToIgnoreCase("\\N") == 0)
                     {
                         data[3] = location;
                         data[4] = country;
