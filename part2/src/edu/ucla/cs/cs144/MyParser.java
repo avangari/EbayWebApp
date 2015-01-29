@@ -294,27 +294,20 @@ class MyParser {
     		}
     		catch(NullPointerException n){
     			str.append("\\N"+"\n");
-    		}
-    		
-    		
-    		
-    		
-    		
+    		}	
     	}
     	
-    	
     	FileWriter f;
-		try {
-			f = new FileWriter("/home/naren/items.csv");
-			
-			f.write(str.toString());
-			f.flush();
-	    	f.close();
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-    	 
+        try {
+                f = new FileWriter("/home/naren/items.csv");
+
+                f.write(str.toString());
+                f.flush();
+        f.close();
+        } catch (IOException e) {
+
+                e.printStackTrace();
+        }
     }
   
     /*******************************************************/
@@ -329,252 +322,148 @@ class MyParser {
     			str.append(e.getAttribute("ItemID")+columnSeparator+c.getFirstChild().getNodeValue()+"\n");
     			
     		}
-    		
     	}
     	
-    	
     	FileWriter f;
-		try {
-			f = new FileWriter("/home/naren/categories.csv");
-			
-			f.write(str.toString());
-			f.flush();
-	    	f.close();
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
-    	
-    	
+        try {
+                f = new FileWriter("/home/naren/categories.csv");
+
+                f.write(str.toString());
+                f.flush();
+        f.close();
+        } catch (IOException e) {
+
+                e.printStackTrace();
+        }
     }
     /*******************************************************************/
-
+    
     // changes xml date to yyyy-MM-dd HH:mm:ss
-    public static String changeTimeFormat(String t) throws ParseException
+   public static String changeTimeFormat(String t) throws ParseException
     {
         DateFormat xmlDate = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
         DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return newDate.format(xmlDate.parse(t));
     }
 
-    public static void createBids(Element item) throws ParseException
+    public static void createBids(Element item)
     {
         String itemID;
         Element bids; 
         Element[] allBids;
         int numOfBids;
-
+        StringBuilder str = new StringBuilder("");
         bids = getElementByTagNameNR(item, "Bids");
         allBids = getElementsByTagNameNR(bids, "Bid");
         itemID = item.getAttribute("ItemID");
         numOfBids = allBids.length;
-
-        for(Element e : allBids)
-        {
-            Element currBidder = getElementByTagNameNR(e, "Bidder");
-            String currBidderUserID = currBidder.getAttribute("UserID");
-            String currBidTime = changeTimeFormat(getElementTextByTagNameNR(e, "Time"));
-            String bidAmount = strip(getElementTextByTagNameNR(e, "Amount"));
-            System.out.println(currBidderUserID + " " + currBidTime + " " + bidAmount);
-            
-            // Write to file/call load function here
-        }
-    }
-
-    public static void createUsers(Element item)
-    {
-        Element[] bids;
-        Element seller, bid, currBidder;
-        String sellerUserID, bidderID, sellerRating, bidderRating, 
-                sellerLocation, bidderLocation, sellerCountry, bidderCountry, temp;
         
-        sellerLocation = getElementText(getElementByTagNameNR(item, "Location"));
-        sellerCountry = getElementText(getElementByTagNameNR(item, "Country"));
-        seller = getElementByTagNameNR(item, "Seller");
-        sellerUserID = seller.getAttribute("UserID");
-        sellerRating = seller.getAttribute("SellerRating");
-        
-        addToMap(sellerUserID, sellerRating, sellerLocation, sellerCountry, true);
-        // Write to file/load the seller information
-        
-        bid = getElementByTagNameNR(item, "Bid");
-        bids = getElementsByTagNameNR(bid, "Bids");
-        
-        for(Element e : bids)
+        try
         {
-            currBidder = getElementByTagNameNR(e, "Bidder");
-            bidderID = currBidder.getAttribute("UserID");
-            bidderRating = currBidder.getAttribute("Rating");
-            bidderLocation = getElementTextByTagNameNR(currBidder, "Location");
-            bidderCountry = getElementTextByTagNameNR(currBidder, "Country");
-            addToMap(bidderID, bidderRating, bidderLocation, bidderCountry, false);
-            
-            // Write to file/load the bidder information 
-        }
-    }
-    
-    public static void addToMap(String userID, String rating, String location, String country, boolean isSeller)
-    {
-        String temp = "";
-        if(!allUsers.containsKey(userID))
-        {
-            if(isSeller)
-                temp = userID+"|"+rating+"|NULL|"+location+"|"+country;
-            else
-                temp = userID+"|NULL|"+rating+"|"+location+"|"+country;
-             
-            allUsers.put(userID, temp);
-        }
-        else
-        {
-            String value = allUsers.get(userID);
-            String[] data = value.split("|");
-            if(data[2].compareToIgnoreCase("NULL") == 0 || data[1].compareToIgnoreCase("NULL") == 0)
-            {
-                if(data[2].compareToIgnoreCase("NULL") == 0)
-                    data[2] = rating;
-                else
-                    data[1] = rating;
-                
-                for(String s : data)
-                {
-                    temp += (s+"|");
-                }
-                allUsers.put(userID, temp);
-            }
-        }
-    }
-    
- // changes xml date to yyyy-MM-dd HH:mm:ss
-       public static String changeTimeFormat(String t) throws ParseException
-        {
-            DateFormat xmlDate = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
-            DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return newDate.format(xmlDate.parse(t));
-        }
-    
-        public static void createBids(Element item)
-        {
-            String itemID;
-            Element bids; 
-            Element[] allBids;
-            int numOfBids;
-            StringBuilder str = new StringBuilder("");
-            bids = getElementByTagNameNR(item, "Bids");
-            allBids = getElementsByTagNameNR(bids, "Bid");
-            itemID = item.getAttribute("ItemID");
-            numOfBids = allBids.length;
-            try{
-            
             for(Element e : allBids)
             {
                 Element currBidder = getElementByTagNameNR(e,"Bidder");
                 String currBidderUserID = currBidder.getAttribute("UserID");
                 String currBidTime = changeTimeFormat(getElementTextByTagNameNR(e, "Time"));
                 String bidAmount = strip(getElementTextByTagNameNR(e, "Amount"));
-                
                 str.append(itemID+columnSeparator+currBidderUserID+columnSeparator+currBidTime+columnSeparator+bidAmount);
                 str.append("\n");
-                
-               
-                
-
             }
-            }
-            catch(ParseException t){
-            	System.out.println(t);
-            }
-            // Write to file/call load function here
-
-        	FileWriter f;
-    		try {
-    			f = new FileWriter("/home/naren/bids.csv",true);
-    			
-    			f.write(str.toString());
-    			f.flush();
-    	    	f.close();
-    		} catch (IOException e) {
-    			
-    			e.printStackTrace();
-    		}
         }
-    
-       // CREATE LOAD FILE FOR USERS
-        public static void createUsers(Element item)
+        catch(ParseException t){
+            System.out.println(t);
+        }
+        // Write to file/call load function here
+        FileWriter f;
+        try 
         {
-            Element[] bids;
-            Element seller, bid, currBidder;
-            String sellerUserID, bidderID, sellerRating, bidderRating,sellerLocation, bidderLocation, sellerCountry, bidderCountry, temp;
-            
-            sellerLocation = getElementText(getElementByTagNameNR(item, "Location"));
-            sellerCountry = getElementText(getElementByTagNameNR(item, "Country"));
-            seller = getElementByTagNameNR(item, "Seller");
-            sellerUserID = seller.getAttribute("UserID");
-            sellerRating = seller.getAttribute("SellerRating");
-            
-            addToMap(sellerUserID, sellerRating, sellerLocation, sellerCountry, true);
-            // Write to file/load the seller information
+            f = new FileWriter("/home/naren/bids.csv",true);
+
+            f.write(str.toString());
+            f.flush();
+            f.close();
+        } catch (IOException e) {
+                e.printStackTrace();
+        }
+    }
+
+   // CREATE LOAD FILE FOR USERS
+    public static void createUsers(Element item)
+    {
+        Element[] bids;
+        Element seller, bid, currBidder;
+        String sellerUserID, bidderID, sellerRating, bidderRating,sellerLocation, bidderLocation, sellerCountry, bidderCountry, temp;
+
+        seller = getElementByTagNameNR(item, "Seller");
+        sellerUserID = seller.getAttribute("UserID");
+        sellerRating = seller.getAttribute("SellerRating");
+
+        addToMap(sellerUserID, sellerRating, "\\N", "\\N", true);
+        // Write to file/load the seller information
+        try{
+            bid = getElementByTagNameNR(item, "Bid");
+            bids = getElementsByTagNameNR(bid, "Bids");
+        }
+        catch(NullPointerException t){
+            return;
+        }
+
+        for(Element e : bids)
+        {
+            currBidder = getElementByTagNameNR(e, "Bidder");
+            bidderID = currBidder.getAttribute("UserID");
+            bidderRating = currBidder.getAttribute("Rating");
             try{
-            	bid = getElementByTagNameNR(item, "Bid");
-                bids = getElementsByTagNameNR(bid, "Bids");
+            bidderLocation = getElementTextByTagNameNR(currBidder, "Location");
+            bidderCountry = getElementTextByTagNameNR(currBidder, "Country");
             }
             catch(NullPointerException t){
-            	return;
+                    bidderLocation = "\\N";
+                    bidderCountry = "\\N";
             }
-            
-            
-            for(Element e : bids)
-            {
-                currBidder = getElementByTagNameNR(e, "Bidder");
-                bidderID = currBidder.getAttribute("UserID");
-                bidderRating = currBidder.getAttribute("Rating");
-                try{
-                bidderLocation = getElementTextByTagNameNR(currBidder, "Location");
-                bidderCountry = getElementTextByTagNameNR(currBidder, "Country");
-                }
-                catch(NullPointerException t){
-                	bidderLocation = "\\N";
-                	bidderCountry = "\\N";
-                }
-                addToMap(bidderID, bidderRating, bidderLocation, bidderCountry, false);
-                
-                // Write to file/load the bidder information 
-            }
-            
-            
+            addToMap(bidderID, bidderRating, bidderLocation, bidderCountry, false);
+            // Write to file/load the bidder information 
         }
-        
-        public static void addToMap(String userID, String rating, String location, String country, boolean isSeller)
+    }
+
+    public static void addToMap(String userID, String rating, String location, String country, boolean isSeller)
+        {
+            StringBuilder str = new StringBuilder("");
+            if(!allUsers.containsKey(userID))
             {
+                if(isSeller)
+                    str.append(userID+columnSeparator+rating+columnSeparator+"\\N"+columnSeparator+location+columnSeparator+country);
+                else
+                    str.append(userID+columnSeparator+"\\N"+columnSeparator+rating+columnSeparator+location+columnSeparator+country);
+
+                allUsers.put(userID, str.toString());
+            }
+            else
+            {
+                String value = allUsers.get(userID);
                 String temp = "";
-                if(!allUsers.containsKey(userID))
+                String[] data = value.split("|\\*|");
+                if(data[2].compareToIgnoreCase("\\N") == 0 || data[1].compareToIgnoreCase("\\N") == 0)
                 {
-                    if(isSeller)
-                        temp = userID+columnSeparator+rating+columnSeparator+"\\N"+columnSeparator+location+columnSeparator+country;
+                    if(data[2].compareToIgnoreCase("\\N") == 0)
+                        data[2] = rating;
                     else
-                        temp = userID+columnSeparator+"\\N"+columnSeparator+rating+columnSeparator+location+columnSeparator+country;
-                     
+                        data[1] = rating;
+                    
+                    if(data[3].compareToIgnoreCase("\\N") == 0 || data[4].compareToIgnoreCase("\\N") == 0)
+                    {
+                        data[3] = location;
+                        data[4] = country;
+                    }
+
+                    for(String s : data)
+                    {
+                        temp += (s+columnSeparator);
+                    }
                     allUsers.put(userID, temp);
                 }
-                else
-                {
-                    String value = allUsers.get(userID);
-                    String[] data = value.split("|\\*|");
-                    if(data[2].compareToIgnoreCase("\\N") == 0 || data[1].compareToIgnoreCase("\\N") == 0)
-                 x   {
-                        if(data[2].compareToIgnoreCase("\\N") == 0)
-                            data[2] = rating;
-                        else
-                            data[1] = rating;
-                        
-                        for(String s : data)
-                        {
-                            temp += (s+columnSeparator);
-                        }
-                        allUsers.put(userID, temp);
-                    }
-                }
-           }
+            }
+       }
         
         
         public static void main (String[] args) {
