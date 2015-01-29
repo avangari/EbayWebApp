@@ -51,6 +51,7 @@ import org.xml.sax.SAXParseException;
 
 
 class MyParser {
+	private static int count=0;
 	private static HashMap<String, String> allUsers = new HashMap();
     static final String columnSeparator = "|*|";
     static DocumentBuilder builder;
@@ -196,12 +197,12 @@ class MyParser {
         
         
         
-  //      createCategories(root);
-//        createItems(root);
+        createCategories(root);
+        createItems(root);
         
         Element[] items = getElementsByTagNameNR(root,"Item");
     	for(Element e : items){
-    		//createBids(e);
+    		createBids(e);
     		createUsers(e);
     	}
     	
@@ -212,7 +213,7 @@ class MyParser {
     	}
     	FileWriter f;
 		try {
-			f = new FileWriter("/home/naren/users.csv");
+			f = new FileWriter("users.csv",true);
 			
 			f.write(str.toString());
 			f.flush();
@@ -233,6 +234,7 @@ class MyParser {
     	
     	Element[] items = getElementsByTagNameNR(root,"Item");
     	for(Element e : items){
+    		
     		str.append(e.getAttribute("ItemID")+columnSeparator);
     		str.append(getElementTextByTagNameNR(e,"Name")+columnSeparator);
     		
@@ -304,7 +306,7 @@ class MyParser {
     	
     	FileWriter f;
         try {
-                f = new FileWriter("/home/naren/items.csv");
+                f = new FileWriter("items.csv",true);
 
                 f.write(str.toString());
                 f.flush();
@@ -313,6 +315,7 @@ class MyParser {
 
                 e.printStackTrace();
         }
+        
     }
   
     /*******************************************************/
@@ -331,7 +334,7 @@ class MyParser {
     	
     	FileWriter f;
         try {
-                f = new FileWriter("/home/naren/categories.csv");
+                f = new FileWriter("categories.csv",true);
 
                 f.write(str.toString());
                 f.flush();
@@ -382,7 +385,7 @@ class MyParser {
         FileWriter f;
         try 
         {
-            f = new FileWriter("/home/naren/bids.csv",true);
+            f = new FileWriter("bids.csv",true);
 
             f.write(str.toString());
             f.flush();
@@ -406,8 +409,8 @@ class MyParser {
         addToMap(sellerUserID, sellerRating, "\\N", "\\N", true);
         // Write to file/load the seller information
         try{
-            bid = getElementByTagNameNR(item, "Bid");
-            bids = getElementsByTagNameNR(bid, "Bids");
+            bid = getElementByTagNameNR(item, "Bids");
+            bids = getElementsByTagNameNR(bid, "Bid");
         }
         catch(NullPointerException t){
             return;
@@ -499,6 +502,7 @@ class MyParser {
             File currentFile = new File(args[i]);
             processFile(currentFile);
         }
+       
     }
 }
 
