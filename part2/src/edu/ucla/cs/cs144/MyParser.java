@@ -51,11 +51,7 @@ import org.xml.sax.SAXParseException;
 
 
 class MyParser {
-
 	private static HashMap<String, String> allUsers = new HashMap();
-
-    
-   
     static final String columnSeparator = "|*|";
     static DocumentBuilder builder;
     
@@ -197,17 +193,18 @@ class MyParser {
             methods). */
         Element root = doc.getDocumentElement();
         
-        System.out.println(root.getNodeName());
         
         
-        //createCategories(root);
-        //createItems(root);
+        
+        createCategories(root);
+        createItems(root);
         
         Element[] items = getElementsByTagNameNR(root,"Item");
     	for(Element e : items){
     		createBids(e);
     		createUsers(e);
     	}
+    	
     	StringBuilder str = new StringBuilder("");
     	for(String userID : allUsers.keySet()){
     		String s = allUsers.get(userID);
@@ -265,6 +262,8 @@ class MyParser {
     		
     		
     		
+    		String location = getElementTextByTagNameNR(e,"Location");
+    		str.append(location+columnSeparator);
     		
     		//Getting the latitude and longitude
     		String latitude = getElementByTagNameNR(e,"Location").getAttribute("Latitude");
@@ -273,12 +272,18 @@ class MyParser {
     		else 
     			str.append("\\N"+columnSeparator);
     		
+    		//get location information
+
+    		
     		String longitude = getElementByTagNameNR(e,"Location").getAttribute("Longitude");
     		if(longitude != "")
     			str.append(longitude+columnSeparator);
     		else 
     			str.append("\\N"+columnSeparator);
     		
+    		
+    		String country = getElementTextByTagNameNR(e,"Country");
+    		str.append(country+columnSeparator);
     		
     		
     		//description
