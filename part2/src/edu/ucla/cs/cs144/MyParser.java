@@ -406,7 +406,7 @@ class MyParser {
         sellerUserID = seller.getAttribute("UserID");
         sellerRating = seller.getAttribute("Rating");
 
-        addToMap(sellerUserID, sellerRating, "\\N", "\\N", true);
+        addToMap(sellerUserID, sellerRating, "\\N", "\\N","\\N", true);
         // Write to file/load the seller information
         try{
             bid = getElementByTagNameNR(item, "Bids");
@@ -429,47 +429,41 @@ class MyParser {
                     bidderLocation = "\\N";
                     bidderCountry = "\\N";
             }
-            addToMap(bidderID, bidderRating, bidderLocation, bidderCountry, false);
-            // Write to file/load the bidder information 
+            addToMap(bidderID,"\\N",bidderRating, bidderLocation, bidderCountry, false);
+             
         }
     }
 
-    public static void addToMap(String userID, String rating, String location, String country, boolean isSeller)
+    public static void addToMap(String userID, String sellerRating,String bidderRating, String location, String country, boolean isSeller)
         {
-            StringBuilder str = new StringBuilder("");
-            if(!allUsers.containsKey(userID))
-            {
-                if(isSeller)
-                    str.append(userID+columnSeparator+rating+columnSeparator+"\\N"+columnSeparator+location+columnSeparator+country);
-                else
-                    str.append(userID+columnSeparator+"\\N"+columnSeparator+rating+columnSeparator+location+columnSeparator+country);
-
-                allUsers.put(userID, str.toString());
+            
+            if(isSeller){
+            	if(!allUsers.containsKey(userID)){
+            		allUsers.put(userID,userID+columnSeparator+sellerRating+columnSeparator+bidderRating+columnSeparator+location+columnSeparator+country);
+            	}
+            	else{
+            		String[] str = allUsers.get(userID).split("\\|\\*\\|");
+            		if(str[1].equals("\\N")){
+            			System.out.println(userID);
+            			allUsers.put(userID, userID+columnSeparator+sellerRating+columnSeparator+str[2]+columnSeparator+str[3]+columnSeparator+str[4]);
+            		}
+            	}
             }
-            else
-            {
-                String value = allUsers.get(userID);
-                String temp = "";
-                String[] data = value.split("|\\*|");
-                if(data[2].compareToIgnoreCase("\\N") == 0 || data[1].compareToIgnoreCase("\\N") == 0)
-                {
-                    if(data[2].compareToIgnoreCase("\\N") == 0)
-                        data[2] = rating;
-                    else
-                        data[1] = rating;
-                    
-                    if(data[3].compareToIgnoreCase("\\N") == 0 && data[4].compareToIgnoreCase("\\N") == 0)
-                    {
-                        data[3] = location;
-                        data[4] = country;
-                    }
-
-                    for(String s : data)
-                    {
-                        temp += (s+columnSeparator);
-                    }
-                    allUsers.put(userID, temp);
-                }
+            
+            if(!isSeller){
+            	if(!allUsers.containsKey(userID)){
+            		allUsers.put(userID,userID+columnSeparator+sellerRating+columnSeparator+bidderRating+columnSeparator+location+columnSeparator+country);
+            	}
+            	else{
+            		String[] str = allUsers.get(userID).split("\\|\\*\\|");
+            		if(str[2].equals("\\N")){
+            			System.out.println(userID);
+            			allUsers.put(userID, userID+columnSeparator+str[1]+columnSeparator+bidderRating+columnSeparator+location+columnSeparator+country);
+            		}
+            		
+            	}
+              
+                
             }
        }
         
@@ -505,4 +499,3 @@ class MyParser {
        
     }
 }
-
