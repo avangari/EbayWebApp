@@ -51,8 +51,8 @@ import org.xml.sax.SAXParseException;
 
 
 class MyParser {
-	private static int count=0;
-	private static HashMap<String, String> allUsers = new HashMap();
+    private static int count=0;
+    private static HashMap<String, User> allUsers = new HashMap();
     static final String columnSeparator = "|*|";
     static DocumentBuilder builder;
     
@@ -71,6 +71,36 @@ class MyParser {
 	"DocFragment",
 	"Notation",
     };
+    
+    static class User
+    {
+        private String userID;
+        private String sellerRating;
+        private String bidderRating;
+        private String location;
+        private String country;
+        
+        public User()
+        {
+            userID = "\\N";
+            sellerRating = "\\N";
+            bidderRating = "\\N";
+            location = "\\N";
+            country = "\\N";
+        }
+        
+        public String getUserID(){return userID;}
+        public String getSellerRating(){return sellerRating;}
+        public String getBidderRating(){return bidderRating;}
+        public String getLocation(){return location;}
+        public String getCountry(){return country;}
+        
+        public void setUserID(String s){userID = s;}
+        public void setSellerRating(String s){sellerRating = s;}
+        public void setBidderRating(String s){bidderRating = s;}
+        public void setLocation(String s){location = s;}
+        public void setCountry(String s){country = s;}
+    }
     
     static class MyErrorHandler implements ErrorHandler {
         
@@ -196,8 +226,8 @@ class MyParser {
 
         createCategories(root);
         createItems(root);
-        createBids(e);
-        createUsers(e);
+        createBids(root);
+        createUsers(root);
     }
     
     /* to create the items load file*/
@@ -331,7 +361,7 @@ class MyParser {
         Element[] bids;
         Element seller, bid, currBidder;
         String sellerUserID, bidderID, sellerRating, bidderRating,sellerLocation, bidderLocation, sellerCountry, bidderCountry, temp;
-
+        
         for(Element item: items)
         {
             seller = getElementByTagNameNR(item, "Seller");
@@ -367,36 +397,46 @@ class MyParser {
         }
         
         StringBuilder str = new StringBuilder("");
-    	for(String userID : allUsers.keySet()){
-    		String s = allUsers.get(userID);
-    		str.append(s+"\n");
+    	for(String userID : allUsers.keySet())
+        {
+            User u = allUsers.get(userID);
+            str.append(buildUserString(u));
     	}
         writeToFile("users.csv", str.toString());
     }
 
     public static void addToMap(String userID, String sellerRating,String bidderRating, String location, String country, boolean isSeller)
     {
+        User u;
         if(isSeller)
         {
             if(!allUsers.containsKey(userID))
-                allUsers.put(userID,userID+columnSeparator+sellerRating+columnSeparator+bidderRating+columnSeparator+location+columnSeparator+country);
+            {
+                u = new User();
+                u.setUserID(userID); u.setSellerRating(sellerRating); u.setBidderRating(bidderRating); u.setLocation(location); u.setCountry(country);
+                allUsers.put(userID, u);
+            }
             else
             {
-                String[] str = allUsers.get(userID).split("\\|\\*\\|");
-                if(str[1].equals("\\N"))
-                        allUsers.put(userID, userID+columnSeparator+sellerRating+columnSeparator+str[2]+columnSeparator+str[3]+columnSeparator+str[4]);
+                u = allUsers.get(userID);
+                if(u.getSellerRating().equals("\\N"))
+                    u.setSellerRating(sellerRating);
             }
         }
 
         if(!isSeller)
         {
             if(!allUsers.containsKey(userID))
-                allUsers.put(userID,userID+columnSeparator+sellerRating+columnSeparator+bidderRating+columnSeparator+location+columnSeparator+country);
+            {
+                u = new User();
+                u.setUserID(userID); u.setSellerRating(sellerRating); u.setBidderRating(bidderRating); u.setLocation(location); u.setCountry(country);
+                allUsers.put(userID, u);
+            }
             else
             {
-                String[] str = allUsers.get(userID).split("\\|\\*\\|");
-                if(str[2].equals("\\N"))
-                    allUsers.put(userID, userID+columnSeparator+str[1]+columnSeparator+bidderRating+columnSeparator+location+columnSeparator+country);
+                u = allUsers.get(userID);
+                if(u.getBidderRating().equals("\\N"))
+                    u.setBidderRating(bidderRating);
             }
         }
     }
@@ -414,6 +454,23 @@ class MyParser {
         } catch (IOException e) {
                 e.printStackTrace();
         }
+    }
+    
+    public static String buildUserString(User u)
+    {
+        StringBuilder str = new StringBuilder("");
+        str.append(u.userID);
+        str.append(columnSeparator);
+        str.append(u.sellerRating);
+        str.append(columnSeparator);
+        str.append(u.bidderRating);
+        str.append(columnSeparator);
+        str.append(u.location);
+        str.append(columnSeparator);
+        str.append(u.country);
+        str.append(columnSeparator);
+        str.append("\n");
+        return str.toString();
     }
     
     // changes xml date to yyyy-MM-dd HH:mm:ss
