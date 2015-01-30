@@ -82,11 +82,11 @@ class MyParser {
         
         public User()
         {
-            userID = "\\N";
-            sellerRating = "\\N";
-            bidderRating = "\\N";
-            location = "\\N";
-            country = "\\N";
+            userID = null;
+            sellerRating = null;
+            bidderRating = null;
+            location = null;
+            country = null;
         }
         
         public String getUserID(){return userID;}
@@ -228,6 +228,7 @@ class MyParser {
         createItems(root);
         createBids(root);
         createUsers(root);
+        
     }
     
     /* to create the items load file*/
@@ -258,7 +259,7 @@ class MyParser {
             str.append( strip ( getElementTextByTagNameNR(e,"Buy_Price") ) + columnSeparator);
             }
             else 
-                    str.append("\\N"+columnSeparator);
+                    str.append(null+columnSeparator);
             /********************************************/
             str.append(getElementTextByTagNameNR(e,"Number_of_Bids")+columnSeparator);
 
@@ -273,13 +274,13 @@ class MyParser {
             if(latitude != "")
                     str.append(latitude+columnSeparator);
             else 
-                    str.append("\\N"+columnSeparator);
+                    str.append(null+columnSeparator);
 
             String longitude = getElementByTagNameNR(e,"Location").getAttribute("Longitude");
             if(longitude != "")
                     str.append(longitude+columnSeparator);
             else 
-                    str.append("\\N"+columnSeparator);
+                    str.append(null+columnSeparator);
 
 
             String country = getElementTextByTagNameNR(e,"Country");
@@ -297,7 +298,7 @@ class MyParser {
                     str.append(desc+"\n");
             }
             catch(NullPointerException n){
-                    str.append("\\N"+"\n");
+                    str.append(null+"\n");
             }	
     	}	
         writeToFile("items.csv", str.toString());
@@ -350,7 +351,6 @@ class MyParser {
                 System.out.println(t);
             }
         }
-        // Write to file/call load function here
         writeToFile("bids.csv", str.toString());
     }
 
@@ -368,7 +368,7 @@ class MyParser {
             sellerUserID = seller.getAttribute("UserID");
             sellerRating = seller.getAttribute("Rating");
 
-            addToMap(sellerUserID, sellerRating, "\\N", "\\N","\\N", true);
+            addToMap(sellerUserID, sellerRating, null, null, null, true);
             // Write to file/load the seller information
             try{
                 bid = getElementByTagNameNR(item, "Bids");
@@ -388,21 +388,12 @@ class MyParser {
                 bidderCountry = getElementTextByTagNameNR(currBidder, "Country");
                 }
                 catch(NullPointerException t){
-                        bidderLocation = "\\N";
-                        bidderCountry = "\\N";
+                        bidderLocation = null;
+                        bidderCountry = null;
                 }
-                addToMap(bidderID,"\\N",bidderRating, bidderLocation, bidderCountry, false);
-
+                addToMap(bidderID,null,bidderRating, bidderLocation, bidderCountry, false);
             }
         }
-        
-        StringBuilder str = new StringBuilder("");
-    	for(String userID : allUsers.keySet())
-        {
-            User u = allUsers.get(userID);
-            str.append(buildUserString(u));
-    	}
-        writeToFile("users.csv", str.toString());
     }
 
     public static void addToMap(String userID, String sellerRating,String bidderRating, String location, String country, boolean isSeller)
@@ -419,11 +410,11 @@ class MyParser {
             else
             {
                 u = allUsers.get(userID);
-                if(u.getSellerRating().equals("\\N"))
+                if(u.getSellerRating() == null)
                     u.setSellerRating(sellerRating);
             }
         }
-
+        
         if(!isSeller)
         {
             if(!allUsers.containsKey(userID))
@@ -435,7 +426,7 @@ class MyParser {
             else
             {
                 u = allUsers.get(userID);
-                if(u.getBidderRating().equals("\\N"))
+                if(u.getBidderRating() == null)
                     u.setBidderRating(bidderRating);
             }
         }
@@ -461,14 +452,33 @@ class MyParser {
         StringBuilder str = new StringBuilder("");
         str.append(u.userID);
         str.append(columnSeparator);
-        str.append(u.sellerRating);
+        
+        if(u.sellerRating == null)
+            str.append("\\N");
+        else
+            str.append(u.sellerRating);
+        
         str.append(columnSeparator);
-        str.append(u.bidderRating);
+        
+        if(u.bidderRating == null)
+            str.append("\\N");
+        else
+            str.append(u.bidderRating);
+        
         str.append(columnSeparator);
-        str.append(u.location);
+        
+        if(u.location == null)
+            str.append("\\N");
+        else
+            str.append(u.location);
+        
         str.append(columnSeparator);
-        str.append(u.country);
-        str.append(columnSeparator);
+        
+        if(u.country == null)
+            str.append("\\N");
+        else        
+            str.append(u.country);
+        
         str.append("\n");
         return str.toString();
     }
@@ -480,7 +490,6 @@ class MyParser {
         DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return newDate.format(xmlDate.parse(t));
     }
-          
     
     public static void main (String[] args) 
     {
@@ -511,5 +520,12 @@ class MyParser {
             File currentFile = new File(args[i]);
             processFile(currentFile);
         }
+        StringBuilder str = new StringBuilder("");
+    	for(String userID : allUsers.keySet())
+        {
+            User u = allUsers.get(userID);
+            str.append(buildUserString(u));
+        }
+        writeToFile("users.csv", str.toString());   
     }
 }
