@@ -98,13 +98,13 @@ public class Indexer
              String description;
              String c ;
  	     
-     	    while(itemset.next())
+     	    while(itemSet.next())
 	  {
  	     	
-           id = itemset.getInt("Item_ID");
-           name = itemset.getString("Name");
-           description = itemset.getString("Description");
-           c = itemset.getString("Category");
+           id = itemSet.getInt("Item_ID");
+           name = itemSet.getString("Name");
+           description = itemSet.getString("Description");
+           c = itemSet.getString("Category");
            if(!map.containsKey(id) )
 	   {
              Item i = new Item();
