@@ -33,8 +33,8 @@ public interface IAuctionSearch {
 	 * representing the results of the query after skipping numResultsToSkip
 	 * SearchResult objects.
 	 */
-	//public SearchResult[] spatialSearch(String query, SearchRegion region, 
-		//	int numResultsToSkip, int numResultsToReturn);
+	public SearchResult[] spatialSearch(String query, SearchRegion region, 
+			int numResultsToSkip, int numResultsToReturn);
 	
 	/**
 	 * Rebuilds an Item XML Element (and all of its sub-Elements), for the given

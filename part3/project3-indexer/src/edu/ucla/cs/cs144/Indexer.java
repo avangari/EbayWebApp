@@ -155,15 +155,15 @@ public class Indexer
        }
 
           
-           
+           int j =0;
            //index each of the items
            for(int i : map.keySet())
            {
-                  
+             j++;  
              Item item = map.get(i);
              indexItem(item);
             }
-            
+            System.out.println(j);
      	   
         // close the database connection
     	try 
@@ -189,9 +189,9 @@ public class Indexer
     {
     	
     	try {
-    		System.out.println(item.getID());
+    		
         	
-        	IndexWriter writer = getIndexWriter();
+            IndexWriter writer = getIndexWriter();
             Document doc = new Document();
             doc.add(new StringField("Item_ID", item.getID_string(), Field.Store.YES));
             doc.add(new StringField("Name", item.getName(), Field.Store.YES));
@@ -210,7 +210,7 @@ public class Indexer
     
     public IndexWriter getIndexWriter() throws IOException {
         if (indexWriter == null) {
-            Directory indexDir = FSDirectory.open(new File("/var/lib/lucene"));
+            Directory indexDir = FSDirectory.open(new File("/var/lib/lucene/index1"));
             IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_4_10_2, new StandardAnalyzer());
             indexWriter = new IndexWriter(indexDir, config);
         }
