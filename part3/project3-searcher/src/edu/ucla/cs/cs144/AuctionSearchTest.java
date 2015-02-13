@@ -14,7 +14,7 @@ public class AuctionSearchTest {
 
 		
 		
-		String query = "superman";
+		String query = "star trek";
 		int skip_results = 10;
 		int max_results = 20;
 		SearchResult[] basicResults = as.basicSearch(query, skip_results, max_results);
@@ -39,7 +39,7 @@ public class AuctionSearchTest {
 		    new SearchRegion(33.774, -118.63, 34.201, -117.38); 
                 int skip_results = 0;
 		int max_results = 200000;
-		SearchResult[] spatialResults = as.spatialSearch("kitchenware", region, skip_results, max_results);
+		SearchResult[] spatialResults = as.spatialSearch("camera", region, skip_results, max_results);
                 System.out.println("Skipping "+skip_results+" results and diplaying top  "+spatialResults.length+" results");
 		System.out.println("Spatial Seacrh");
 		try
