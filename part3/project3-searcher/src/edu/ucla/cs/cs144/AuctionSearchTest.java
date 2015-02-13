@@ -11,27 +11,27 @@ public class AuctionSearchTest {
 	public static void main(String[] args1)
 	{
 		AuctionSearch as = new AuctionSearch();
-
+		System.out.println(as.getXMLDataForItemId("1309245452"));
 		
 		
-		String query = "star trek";
-		int skip_results = 10;
-		int max_results = 20;
-		SearchResult[] basicResults = as.basicSearch(query, skip_results, max_results);
-		System.out.println("Skipping "+skip_results+" results and diplaying top  "+basicResults.length+" results");
-		System.out.println("Basic Seacrh Query: " + query);
-		try{
-		System.out.println("Received " + basicResults.length + " results");
-		int i=1;
-		for(SearchResult result : basicResults) {
-			System.out.println(i+"----->"+result.getItemId() + ": " + result.getName());
-			i++;
-		}
-		}
-		catch(NullPointerException e)
-		{
-			System.out.println("there are no matching entries for the given query");
-		}
+		// String query = "star trek";
+		// int skip_results = 10;
+		// int max_results = 20;
+		// SearchResult[] basicResults = as.basicSearch(query, skip_results, max_results);
+		// System.out.println("Skipping "+skip_results+" results and diplaying top  "+basicResults.length+" results");
+		// System.out.println("Basic Seacrh Query: " + query);
+		// try{
+		// System.out.println("Received " + basicResults.length + " results");
+		// int i=1;
+		// for(SearchResult result : basicResults) {
+		// 	System.out.println(i+"----->"+result.getItemId() + ": " + result.getName());
+		// 	i++;
+		// }
+		// }
+		// catch(NullPointerException e)
+		// {
+		// 	System.out.println("there are no matching entries for the given query");
+		// }
 		
 
 		/*

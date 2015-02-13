@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.analysis.Analyzer;
@@ -174,13 +175,156 @@ public class AuctionSearch implements IAuctionSearch {
 		return null;
 		
 	}
-
 	
-	
-	public String getXMLDataForItemId(String itemId) {
+	public String getXMLDataForItemId(String itemId) 
+	{
 		// TODO: Your code here!
-		return "";
+		Connection conn = null;
+		try
+		{
+			conn = DbManager.getConnection(true);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		String temp = "", name = "", started = "", ends = "", currently = "$", firstBid = "$", buyPrice = "$", 
+		numOfBids = "", sellerId = "", location = "", locationTwo = "", country = "", description = "", 
+		rating = "", bidderId = "";
+		Float longitude = null, latitude = null;
+		StringBuilder xml = new StringBuilder("");
+		String queryItems = "select * from Items where Item_ID ='" + itemId + "'";
+		String queryCategories = "select * from Categories where Item_ID='" + itemId + "'";
+		String queryBids = "select * from Bids where Item_ID='" + itemId + "'";
+		String sellerQuery;
+
+        try
+        {
+			Statement s = conn.createStatement();
+			ResultSet results = s.executeQuery(queryItems);
+
+			while (results.next()) 
+			{
+				name = results.getString("Name");
+				started = results.getString("Started").toString();
+				ends = results.getTimestamp("Ends").toString();
+				currently += String.format("%.2f", results.getFloat("Currently"));
+				firstBid += String.format("%.2f", results.getFloat("First_Bid"));
+				buyPrice += String.format("%.2f", results.getFloat("Buy_Price"));
+				numOfBids = Integer.toString(results.getInt("No_of_Bids"));
+				sellerId = results.getString("Seller_ID");
+				description = results.getString("Description").toString();
+				longitude = results.getFloat("Longitude");
+				latitude = results.getFloat("Latitude");
+				location = results.getString("Location");
+			}
+			xml.append("<Item ItemID=");
+			xml.append("Item ItemID=\""+itemId.toString()+"\">\n");
+			xml.append(getTag("Name", name));
+
+			results = s.executeQuery(queryCategories);
+
+			while (results.next()) 
+			{
+				xml.append(getTag("Category", results.getString("Category")));
+			}
+			xml.append(getTag("Currently", currently));
+
+			if (buyPrice.compareTo("0.00") != 0)
+				xml.append(getTag("Buy_Price", buyPrice));
+
+			xml.append(getTag("First_Bid", firstBid));
+			xml.append(getTag("Number_of_Bids", numOfBids));			
+			xml.append("<Bids>\n");
+
+			results = s.executeQuery(queryBids);
+
+			while (results.next()) 
+			{
+				try
+				{
+					Statement sTwo = conn.createStatement();
+					ResultSet resultsTwo = sTwo.executeQuery("select * from Users where User_ID ='"+results.getString("User_ID")+"'");
+					while(resultsTwo.next())
+					{
+						rating = resultsTwo.getString("Bidder_Rating");
+						locationTwo = resultsTwo.getString("Location");
+						country = resultsTwo.getString("Country");
+					}
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				xml.append("<Bid>\n");
+				xml.append("<Bidder Rating=\"");
+				xml.append(rating);
+				xml.append("\" UserID=\"");
+				xml.append(results.getString("User_ID"));
+				xml.append("\">\n");
+				xml.append(getTag("Location", locationTwo));
+				xml.append(getTag("Country", country));
+				xml.append("</Bidder>\n");
+				xml.append(getTag("Time", changeTimeFormat(results.getTimestamp("Time").toString())));
+				xml.append(getTag("Amount", "$"+String.format("%.2f", results.getFloat("Amount"))));
+			}
+			xml.append("</Bids>\n");
+
+			sellerQuery = "select * from Users where User_ID='" + sellerId + "'";
+			results = s.executeQuery(sellerQuery);
+
+			while (results.next()) 
+			{
+				rating = Integer.toString(results.getInt("Seller_Rating"));
+				if(longitude != null && latitude != null)
+				{
+					xml.append("<Location Latitude=\""+latitude+"\" Longitude=\""+longitude+"\">"+location+"</Location>\n");
+				}
+				else
+					xml.append(getTag(("Location"), location));
+				xml.append(getTag(("Country"), results.getString("Country")));
+			}
+			xml.append(getTag(("Started"), changeTimeFormat(started)));
+			xml.append(getTag(("Ends"), changeTimeFormat(ends)));
+			xml.append("<Seller Rating=\""+rating+"\" UserID=\""+sellerId+"\"/>\n");
+			xml.append(getTag(("Description"), description));
+			xml.append("</Item>");
+        } 
+        catch (Exception e) 
+        {
+        	e.printStackTrace();
+        }
+        return xml.toString();
 	}
+	
+	public String getTag(String tag, String value)
+	{
+		StringBuilder temp = new StringBuilder("");
+		temp.append("<");
+		temp.append(tag);
+		temp.append(">");
+		temp.append(value);
+		temp.append("</");
+		temp.append(tag);
+		temp.append(">\n");
+		return temp.toString();
+	}
+
+	public static String changeTimeFormat(String t) throws ParseException
+    {
+        DateFormat xmlDate = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
+        DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try
+        {
+        	return xmlDate.format(newDate.parse(t));
+        }
+        catch(Exception e)
+        {
+        	e.printStackTrace();
+        }
+        return null;
+    }
 	
 	public String echo(String message) {
 		return message;
