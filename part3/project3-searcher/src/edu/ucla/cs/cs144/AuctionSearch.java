@@ -1,5 +1,4 @@
 package edu.ucla.cs.cs144;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
@@ -106,18 +105,13 @@ public class AuctionSearch implements IAuctionSearch {
 				LinkedList<Integer> list = new LinkedList<Integer>();
 				HashMap<String, String> hash = new HashMap<String,String>();
 	    	    Connection conn = DbManager.getConnection(true);
-	    	    Statement statement = conn.createStatement();
-	    	    
-	    	    
-	    	    
+	    	    Statement statement = conn.createStatement(); 
 			
 			TopDocs topDocs = se.performSearch(query); 
 
 			// obtain the ScoreDoc (= documentID, relevanceScore) array from topDocs
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			System.out.println("the number of matches found from the keyword query is  :"+ hits.length);
-			
-		
 			
 			//a list of items returned from the keyword query
 			StringBuilder items = new StringBuilder("(");
@@ -164,21 +158,16 @@ public class AuctionSearch implements IAuctionSearch {
 				String name = hash.get(id);
 				sr[i] = new SearchResult(id,name);
 			}
-			
 			return sr;
-			
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		
 		return null;
-		
 	}
 	
 	public String getXMLDataForItemId(String itemId) 
 	{
-		// TODO: Your code here!
 		Connection conn = null;
 		try
 		{
@@ -206,7 +195,7 @@ public class AuctionSearch implements IAuctionSearch {
 
 			while (results.next()) 
 			{
-				name = results.getString("Name");
+				name = results.getString("Name").replace("<","&lt;").replace(">","&gt;");
 				started = results.getString("Started").toString();
 				ends = results.getTimestamp("Ends").toString();
 				currently += String.format("%.2f", results.getFloat("Currently"));
@@ -214,24 +203,23 @@ public class AuctionSearch implements IAuctionSearch {
 				buyPrice += String.format("%.2f", results.getFloat("Buy_Price"));
 				numOfBids = Integer.toString(results.getInt("No_of_Bids"));
 				sellerId = results.getString("Seller_ID");
-				description = results.getString("Description").toString();
+				description = results.getString("Description").toString().replace("<","&lt;").replace(">","&gt;");
 				longitude = results.getFloat("Longitude");
 				latitude = results.getFloat("Latitude");
 				location = results.getString("Location");
 			}
-			xml.append("<Item ItemID=");
-			xml.append("Item ItemID=\""+itemId.toString()+"\">\n");
+			xml.append("<Item ItemID=\""+itemId.toString()+"\">\n");
 			xml.append(getTag("Name", name));
 
 			results = s.executeQuery(queryCategories);
 
 			while (results.next()) 
 			{
-				xml.append(getTag("Category", results.getString("Category")));
+				xml.append(getTag("Category", results.getString("Category").replace("<","&lt;").replace(">","&gt;")));
 			}
 			xml.append(getTag("Currently", currently));
 
-			if (buyPrice.compareTo("0.00") != 0)
+			if (buyPrice.compareTo("$0.00") != 0)
 				xml.append(getTag("Buy_Price", buyPrice));
 
 			xml.append(getTag("First_Bid", firstBid));
@@ -295,7 +283,7 @@ public class AuctionSearch implements IAuctionSearch {
         {
         	e.printStackTrace();
         }
-        return xml.toString();
+        return xml.toString().replace("&","&amp;");
 	}
 	
 	public String getTag(String tag, String value)
@@ -311,7 +299,7 @@ public class AuctionSearch implements IAuctionSearch {
 		return temp.toString();
 	}
 
-	public static String changeTimeFormat(String t) throws ParseException
+	public static String changeTimeFormat(String t)
     {
         DateFormat xmlDate = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
         DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
