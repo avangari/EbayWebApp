@@ -1,5 +1,4 @@
 package edu.ucla.cs.cs144;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
@@ -15,6 +14,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.analysis.Analyzer;
@@ -110,18 +110,13 @@ public class AuctionSearch implements IAuctionSearch {
 				LinkedList<Integer> list = new LinkedList<Integer>();
 				HashMap<String, String> hash = new HashMap<String,String>();
 	    	    Connection conn = DbManager.getConnection(true);
-	    	    Statement statement = conn.createStatement();
-	    	    
-	    	    
-	    	    
+	    	    Statement statement = conn.createStatement(); 
 			
 			TopDocs topDocs = se.performSearch(query); 
 
 			// obtain the ScoreDoc (= documentID, relevanceScore) array from topDocs
 			ScoreDoc[] hits = topDocs.scoreDocs;
 			System.out.println("the number of matches found from the keyword query is  :"+ hits.length);
-			
-		
 			
 			//a list of items returned from the keyword query
 			StringBuilder items = new StringBuilder("(");
@@ -168,18 +163,13 @@ public class AuctionSearch implements IAuctionSearch {
 				String name = hash.get(id);
 				sr[i] = new SearchResult(id,name);
 			}
-			
 			return sr;
-			
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		
 		return null;
-		
 	}
-
 	
 	public String getXMLDataForItemId(String itemId) 
 	{
@@ -192,7 +182,11 @@ public class AuctionSearch implements IAuctionSearch {
 		{
 			e.printStackTrace();
 		}
+<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 		
+=======
+
+>>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 		String temp = "", name = "", started = "", ends = "", currently = "$", firstBid = "$", buyPrice = "$", 
 		numOfBids = "", sellerId = "", location = "", locationTwo = "", country = "", description = "", 
 		rating = "", bidderId = "";
@@ -207,8 +201,12 @@ public class AuctionSearch implements IAuctionSearch {
         {
 			Statement s = conn.createStatement();
 			ResultSet results = s.executeQuery(queryItems);
+
 			if(!results.next())
 				return null;
+
+
+
 			while (results.next()) 
 			{
 				name = results.getString("Name").replace("<","&lt;").replace(">","&gt;");
@@ -219,8 +217,12 @@ public class AuctionSearch implements IAuctionSearch {
 				buyPrice += String.format("%.2f", results.getFloat("Buy_Price"));
 				numOfBids = Integer.toString(results.getInt("No_of_Bids"));
 				sellerId = results.getString("Seller_ID");
+
 				if(results.getString("Description") != null)
 					description = results.getString("Description").toString().replace("<","&lt;").replace(">","&gt;");
+
+				
+
 				longitude = results.getFloat("Longitude");
 				latitude = results.getFloat("Latitude");
 				location = results.getString("Location");
@@ -273,7 +275,10 @@ public class AuctionSearch implements IAuctionSearch {
 				xml.append("</Bidder>\n");
 				xml.append(getTag("Time", changeTimeFormat(results.getTimestamp("Time").toString())));
 				xml.append(getTag("Amount", "$"+String.format("%.2f", results.getFloat("Amount"))));
+<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 				xml.append("</Bid>\n");
+=======
+>>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 			}
 			xml.append("</Bids>\n");
 
@@ -294,8 +299,12 @@ public class AuctionSearch implements IAuctionSearch {
 			xml.append(getTag(("Started"), changeTimeFormat(started)));
 			xml.append(getTag(("Ends"), changeTimeFormat(ends)));
 			xml.append("<Seller Rating=\""+rating+"\" UserID=\""+sellerId+"\"/>\n");
+<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 			if(description != "")			
 				xml.append(getTag(("Description"), description));
+=======
+			xml.append(getTag(("Description"), description));
+>>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 			xml.append("</Item>");
         } 
         catch (Exception e) 
@@ -305,7 +314,10 @@ public class AuctionSearch implements IAuctionSearch {
         return xml.toString().replace("&","&amp;");
 	}
 	
+<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 	
+=======
+>>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 	public String getTag(String tag, String value)
 	{
 		StringBuilder temp = new StringBuilder("");
@@ -333,7 +345,10 @@ public class AuctionSearch implements IAuctionSearch {
         }
         return null;
     }
+<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 	
+=======
+>>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 	
 	public String echo(String message) {
 		return message;
