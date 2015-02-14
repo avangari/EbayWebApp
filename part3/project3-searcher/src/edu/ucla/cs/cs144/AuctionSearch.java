@@ -265,7 +265,7 @@ public class AuctionSearch implements IAuctionSearch {
 			while (results.next()) 
 			{
 				rating = Integer.toString(results.getInt("Seller_Rating"));
-				if(longitude != null && latitude != null)
+				if(!Float.toString(longitude).equals("0.0") && !Float.toString(latitude).equals("0.0"))
 				{
 					xml.append("<Location Latitude=\""+latitude+"\" Longitude=\""+longitude+"\">"+location+"</Location>\n");
 				}

@@ -11,7 +11,7 @@ public class AuctionSearchTest {
 	public static void main(String[] args1)
 	{
 		AuctionSearch as = new AuctionSearch();
-		System.out.println(as.getXMLDataForItemId("1309245452"));
+		System.out.println(as.getXMLDataForItemId("1309238168"));
 		
 		
 		// String query = "star trek";
