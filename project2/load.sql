@@ -1,0 +1,15 @@
+-- Akshay Vangari
+-- Naren Nagarajappa
+-- CS144 Proj2
+use CS144;
+LOAD DATA LOCAL INFILE 'users.dat' INTO TABLE Users
+FIELDS TERMINATED BY '|*|';
+
+LOAD DATA LOCAL INFILE 'items.dat' INTO TABLE Items
+FIELDS TERMINATED BY '|*|';
+
+LOAD DATA LOCAL INFILE 'categories.dat' INTO TABLE Categories
+FIELDS TERMINATED BY '|*|';
+
+LOAD DATA LOCAL INFILE 'bids.dat' INTO TABLE Bids
+FIELDS TERMINATED BY '|*|';
