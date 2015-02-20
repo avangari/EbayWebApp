@@ -182,13 +182,9 @@ public class AuctionSearch implements IAuctionSearch {
 		{
 			e.printStackTrace();
 		}
-<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
-		
-=======
 
->>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 		String temp = "", name = "", started = "", ends = "", currently = "$", firstBid = "$", buyPrice = "$", 
-		numOfBids = "", sellerId = "", location = "", locationTwo = "", country = "", description = "", 
+		numOfBids = "", sellerId = "", location = "", locationTwo = "", itemCountry = "", country = "", description = "", 
 		rating = "", bidderId = "";
 		Float longitude = null, latitude = null;
 		StringBuilder xml = new StringBuilder("");
@@ -206,7 +202,7 @@ public class AuctionSearch implements IAuctionSearch {
 				return null;
 
 
-
+			results.beforeFirst();
 			while (results.next()) 
 			{
 				name = results.getString("Name").replace("<","&lt;").replace(">","&gt;");
@@ -226,6 +222,7 @@ public class AuctionSearch implements IAuctionSearch {
 				longitude = results.getFloat("Longitude");
 				latitude = results.getFloat("Latitude");
 				location = results.getString("Location");
+				itemCountry = results.getString("Country");
 			}
 			xml.append("<Item ItemID=\""+itemId.toString()+"\">\n");
 			xml.append(getTag("Name", name));
@@ -238,7 +235,7 @@ public class AuctionSearch implements IAuctionSearch {
 			}
 			xml.append(getTag("Currently", currently));
 
-			if (buyPrice.compareTo("$0.00") != 0)
+			if (buyPrice.compareTo("$0.0") != 0)
 				xml.append(getTag("Buy_Price", buyPrice));
 
 			xml.append(getTag("First_Bid", firstBid));
@@ -275,10 +272,7 @@ public class AuctionSearch implements IAuctionSearch {
 				xml.append("</Bidder>\n");
 				xml.append(getTag("Time", changeTimeFormat(results.getTimestamp("Time").toString())));
 				xml.append(getTag("Amount", "$"+String.format("%.2f", results.getFloat("Amount"))));
-<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 				xml.append("</Bid>\n");
-=======
->>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 			}
 			xml.append("</Bids>\n");
 
@@ -294,17 +288,14 @@ public class AuctionSearch implements IAuctionSearch {
 				}
 				else
 					xml.append(getTag(("Location"), location));
-				xml.append(getTag(("Country"), results.getString("Country")));
+				xml.append(getTag(("Country"), itemCountry));
 			}
 			xml.append(getTag(("Started"), changeTimeFormat(started)));
 			xml.append(getTag(("Ends"), changeTimeFormat(ends)));
 			xml.append("<Seller Rating=\""+rating+"\" UserID=\""+sellerId+"\"/>\n");
-<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 			if(description != "")			
 				xml.append(getTag(("Description"), description));
-=======
 			xml.append(getTag(("Description"), description));
->>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 			xml.append("</Item>");
         } 
         catch (Exception e) 
@@ -314,10 +305,6 @@ public class AuctionSearch implements IAuctionSearch {
         return xml.toString().replace("&","&amp;");
 	}
 	
-<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
-	
-=======
->>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
 	public String getTag(String tag, String value)
 	{
 		StringBuilder temp = new StringBuilder("");
@@ -345,11 +332,7 @@ public class AuctionSearch implements IAuctionSearch {
         }
         return null;
     }
-<<<<<<< HEAD:project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
-	
-=======
->>>>>>> 5a185d5254763b08a94f75e03496ea3da1647143:part3/project3-searcher/src/edu/ucla/cs/cs144/AuctionSearch.java
-	
+		
 	public String echo(String message) {
 		return message;
 	}
