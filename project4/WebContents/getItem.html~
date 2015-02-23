@@ -1,12 +1,24 @@
 <html>
+<<<<<<< HEAD
 	<head><title>getItem</title></head>
     <body>
     	<h1>getItem</h1>
     	<form action="/eBay/item" method="GET">
     		ItemID: <input type="text" name="id" id="id"/> <br />
-    		<input type="hidden" name="numResultsToSkip" value="0"/>
-			<input type="hidden" name="numResultsToReturn" value="10"/><br/>
+    		
     		<input type="submit"/>
     	</form>
     </body>
 </html>
+=======
+	<head><title>Get Item</title></head>
+    <body>
+    	<h1>Search Items</h1>
+    	<form action="/eBay/item">
+    		Item ID: <input name="itemId" type="text"/>
+    		<br/>
+    		<input type="submit" />
+    	</form>
+    </body>
+</html>
+>>>>>>> ab4108c0fa7dcfa1ff5994fca868ca857ae9c20d
