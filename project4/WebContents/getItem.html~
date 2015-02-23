@@ -1,0 +1,12 @@
+<html>
+	<head><title>getItem</title></head>
+    <body>
+    	<h1>getItem</h1>
+    	<form action="/eBay/item" method="GET">
+    		ItemID: <input type="text" name="id" id="id"/> <br />
+    		<input type="hidden" name="numResultsToSkip" value="0"/>
+			<input type="hidden" name="numResultsToReturn" value="10"/><br/>
+    		<input type="submit"/>
+    	</form>
+    </body>
+</html>

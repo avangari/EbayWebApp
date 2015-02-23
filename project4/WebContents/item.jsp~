@@ -1,0 +1,11 @@
+<html>
+<head>
+	<title> Item data </title>
+ 	 <%@ page import="edu.ucla.cs.cs144.Item" %>
+	 <%@ page import="edu.ucla.cs.cs144.Bid" %>
+</head>
+<body>
+
+<p> <%= request.getAttribute("id") %>
+</body>
+</html>
