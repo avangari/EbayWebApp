@@ -43,7 +43,7 @@ public class Item{
 
 	public String printAll()
 	{
-		return name+"<br/>"+current_bid+"<br/>"+first_bid+"<br/>"+no_of_bids+"<br/>"+location+"<br/>"+country+"<br/>"+started+"<br/>"+ends+"<br/>"+seller_id+"<br/>"+seller_rating+"<br/>"+decription;
+		return name+"<br/>"+current_bid+"<br/>"+first_bid+"<br/>"+no_of_bids+"<br/>"+location+"<br/>"+country+"<br/>"+started.toString()+"<br/>"+ends.toString()+"<br/>"+seller_id+"<br/>"+seller_rating+"<br/>"+decription;
 	}
 }
 

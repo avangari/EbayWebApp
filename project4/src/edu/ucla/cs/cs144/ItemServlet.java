@@ -102,8 +102,8 @@ class MyParser {
 
         //change time format to SQl insertion
         try{
-            to_return.started = new Date(changeTimeFormat(doc.getElementsByTagName("Started").item(0).getTextContent()));
-            to_return.ends = new Date(changeTimeFormat(doc.getElementsByTagName("Ends").item(0).getTextContent()));
+            to_return.started = changeTimeFormat(doc.getElementsByTagName("Started").item(0).getTextContent());
+            to_return.ends = changeTimeFormat(doc.getElementsByTagName("Ends").item(0).getTextContent());
         }
         catch(Exception e){
             e.printStackTrace();
@@ -194,10 +194,10 @@ class MyParser {
    }
        
    // changes xml date to yyyy-MM-dd HH:mm:ss
-   public static String changeTimeFormat(String t) throws ParseException
+   public static Date changeTimeFormat(String t) throws ParseException
    {
        DateFormat xmlDate = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
        DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-       return newDate.format(xmlDate.parse(t));
+       return newDate.parse(newDate.format(xmlDate.parse(t)));
    }
 }
