@@ -40,6 +40,11 @@ public class Item{
 	{
 		return name;
 	}
+
+	public String printAll()
+	{
+		return name+"<br/>"+current_bid+"<br/>"+first_bid+"<br/>"+no_of_bids+"<br/>"+location+"<br/>"+country+"<br/>"+started+"<br/>"+ends+"<br/>"+seller_id+"<br/>"+seller_rating+"<br/>"+decription;
+	}
 }
 
 
