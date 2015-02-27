@@ -4,6 +4,22 @@
  	 <%@ page import="edu.ucla.cs.cs144.Item" %>
 	 <%@ page import="edu.ucla.cs.cs144.Bid" %>
 	 <link rel="stylesheet" type="text/css" href="styles.css">
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCizZ44XO3l_pPhWxQ3tw7kpR0GqIW6GCI">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+    	var latitude = document.getElementById("latitude");
+    	var longitude = document.getElementById("longitude");
+        var mapOptions = {
+          center: { lat: logitude, lng: longitude},
+          zoom: 8
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
 </head>
 <body>
 	<h1>Search for new item</h1>
@@ -12,6 +28,7 @@
 		<input type="submit"/>
 	</form>
 	<% Item item = (Item)request.getAttribute("item"); %>
+	<p><strong>ID: </strong><%= item.getItem_ID() %></p>
 	<p><strong>Item: </strong><%= item.getName() %></p>
 	<p><strong>Current Bid: </strong>$<%= item.getCurrent_bid() %></p>
 	<p><strong>First Bid: </strong>$<%= item.getFirst_bid() %></p>
@@ -22,12 +39,13 @@
 	<p><strong>Country: </strong><%= item.getCountry() %></p>	
 
 	<%if(item.getLatitude() != ""){%>
-	  	<p><strong>Latitude: </strong><%= item.getLatitude()%></p>
+	  	<p id="latitude"><strong>Latitude: </strong><%= item.getLatitude()%></p>
 	<%}%>	
 	
 	<%if(item.getLongitude() != ""){%>
-	  	<p><strong>Longitude: </strong><%= item.getLongitude()%></p>
+	  	<p id="longitude"><strong>Longitude: </strong><%= item.getLongitude()%></p>
 	<%}%>	
+	<div id = "map-canvas"> </div>
 
 	<p><strong>Start Date: </strong><%= item.getStarted() %></p>
 	<p><strong>End Date: </strong><%= item.getEnds() %></p>

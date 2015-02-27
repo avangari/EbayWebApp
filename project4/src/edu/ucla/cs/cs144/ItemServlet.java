@@ -80,7 +80,16 @@ class MyParser
         }
         return createItem();
     }
-
+    
+    static Element getElementByTagNameNR(Element e, String tagName) {
+        Node child = e.getFirstChild();
+        while (child != null) {
+            if (child instanceof Element && child.getNodeName().equals(tagName))
+                return (Element) child;
+            child = child.getNextSibling();
+        }
+        return null;
+    }
     // changes xml date to yyyy-MM-dd HH:mm:ss
     public static Date changeTimeFormat(String t) throws ParseException
     {
@@ -108,9 +117,12 @@ class MyParser
    private static Item createItem()
    {
         Item to_return = new Item();
-
+        Element item = doc.getDocumentElement();
+        
         to_return.setName(doc.getElementsByTagName("Name").item(0).getTextContent());
-
+        String id = item.getAttribute("ItemID");
+        
+        to_return.setItem_ID(Integer.parseInt(id));
         //change time format to SQl insertion
         try{
             to_return.setStarted(changeTimeFormat(doc.getElementsByTagName("Started").item(0).getTextContent()));
@@ -134,12 +146,12 @@ class MyParser
         to_return.setLocation(doc.getElementsByTagName("Location").item(0).getTextContent());
         
         //Getting the latitude and longitude
-        String latitude = ((Element)doc.getElementsByTagName("Location").item(0)).getAttribute("Latitude");
-        if(latitude != "")
+        String latitude = getElementByTagNameNR(item,"Location").getAttribute("Latitude");
+        
            to_return.setLatitude(latitude);
 
-        String longitude = ((Element)doc.getElementsByTagName("Location").item(0)).getAttribute("Longitude");
-        if(longitude != "")
+        String longitude = getElementByTagNameNR(item,"Location").getAttribute("Longitude");
+       
             to_return.setLongitude(longitude);
 
         String country = doc.getElementsByTagName("Country").item(0).getTextContent();
