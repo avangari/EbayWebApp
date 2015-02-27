@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.io.PrintWriter;
 import java.io.File;
 import java.text.ParseException;
+import edu.ucla.cs.cs144.Bid;
+
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -42,162 +44,163 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.InputSource;
 
-public class ItemServlet extends HttpServlet implements Servlet {
-       
+public class ItemServlet extends HttpServlet implements Servlet 
+{
     public ItemServlet() {}
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setContentType("text/html");
-        
         String ID = request.getParameter("itemId");
         String xmlString = AuctionSearchClient.getXMLDataForItemId(ID);
-        
         Item item = MyParser.loadXMLFromString(xmlString);
-        
         request.setAttribute("item",item);
-        
         request.getRequestDispatcher("/item.jsp").forward(request, response);
-    }
-    
-  
+    }  
 }
 
-class MyParser {
-   private static int count=0;
-   static DocumentBuilder builder;
-   static Element root;
-   static Document doc;
-   
-   public static Item loadXMLFromString(String xml) 
-   {
-       
-       try {
+class MyParser 
+{
+    private static int count=0;
+    static DocumentBuilder builder;
+    static Element root;
+    static Document doc;
+
+    public static Item loadXMLFromString(String xml) 
+    {
+        try 
+        {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
             InputSource is = new InputSource(new StringReader(xml));
             doc = builder.parse(is);
-       }
-       catch (FactoryConfigurationError e) {
-           System.out.println("unable to get a document builder factory");
-           System.exit(2);
-       } 
-       catch (ParserConfigurationException e) {
-           System.out.println("parser was unable to be configured");
-           System.exit(2);
-       }
-      catch(Exception e)
-       {
-          e.printStackTrace();
-       }
-       
-       return createItem();
-   }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return createItem();
+    }
+
+    // changes xml date to yyyy-MM-dd HH:mm:ss
+    public static Date changeTimeFormat(String t) throws ParseException
+    {
+        DateFormat xmlDate = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
+        DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return newDate.parse(newDate.format(xmlDate.parse(t)));
+    }
+
+    static Element[] getElementsByTagNameNR(Element e, String tagName) 
+    {
+        Vector< Element > elements = new Vector< Element >();
+        Node child = e.getFirstChild();
+        while (child != null) {
+            if (child instanceof Element && child.getNodeName().equals(tagName))
+            {
+                elements.add( (Element)child );
+            }
+            child = child.getNextSibling();
+        }
+        Element[] result = new Element[elements.size()];
+        elements.copyInto(result);
+        return result;
+    }
    
    private static Item createItem()
    {
         Item to_return = new Item();
 
-        to_return.name = doc.getElementsByTagName("Name").item(0).getTextContent();
+        to_return.setName(doc.getElementsByTagName("Name").item(0).getTextContent());
 
         //change time format to SQl insertion
         try{
-            to_return.started = changeTimeFormat(doc.getElementsByTagName("Started").item(0).getTextContent());
-            to_return.ends = changeTimeFormat(doc.getElementsByTagName("Ends").item(0).getTextContent());
+            to_return.setStarted(changeTimeFormat(doc.getElementsByTagName("Started").item(0).getTextContent()));
+            to_return.setEnds(changeTimeFormat(doc.getElementsByTagName("Ends").item(0).getTextContent()));
         }
         catch(Exception e){
             e.printStackTrace();
         }
 
-        to_return.current_bid = Double.parseDouble(doc.getElementsByTagName("Currently").item(0).getTextContent().substring(1));
-        to_return.first_bid =  Double.parseDouble(doc.getElementsByTagName("First_Bid").item(0).getTextContent().substring(1));
-        /******* if the Buy price is specified, use it***/
-        // if(doc.getElementsByTagName("Buy_Price").item(0).getTextContent() != null)
-        //     to_return.buy_price = Double.parseDouble(doc.getElementsByTagName("Buy_Price").item(0).getTextContent().substring(1));
+        to_return.setCurrent_bid(Double.parseDouble(doc.getElementsByTagName("Currently").item(0).getTextContent().substring(1)));
+        to_return.setFirst_bid(Double.parseDouble(doc.getElementsByTagName("First_Bid").item(0).getTextContent().substring(1)));
         
-        to_return.no_of_bids = Integer.parseInt(doc.getElementsByTagName("Number_of_Bids").item(0).getTextContent());
+        /******* if the Buy price is specified, use it***/
+        if(doc.getElementsByTagName("Buy_Price").item(0) != null)
+            to_return.setBuy_price(Double.parseDouble(doc.getElementsByTagName("Buy_Price").item(0).getTextContent().substring(1)));
+        
+        to_return.setNo_of_bids(Integer.parseInt(doc.getElementsByTagName("Number_of_Bids").item(0).getTextContent()));
+        to_return.setSeller_id(((Element)doc.getElementsByTagName("Seller").item(0)).getAttribute("UserID"));
+        to_return.setSeller_rating(Integer.parseInt(((Element)doc.getElementsByTagName("Seller").item(0)).getAttribute("Rating")));  
 
-        //allocate the size for bids array
-        to_return.allocateBids();
-
-        //NodeList sellers = doc.getElementsByTagName("Seller");
-        to_return.seller_id = ((Element)doc.getElementsByTagName("Seller").item(0)).getAttribute("UserID");
-        to_return.seller_rating = Integer.parseInt(((Element)doc.getElementsByTagName("Seller").item(0)).getAttribute("Rating"));  
-
-        to_return.location = doc.getElementsByTagName("Location").item(0).getTextContent();
+        to_return.setLocation(doc.getElementsByTagName("Location").item(0).getTextContent());
         
         //Getting the latitude and longitude
         String latitude = ((Element)doc.getElementsByTagName("Location").item(0)).getAttribute("Latitude");
         if(latitude != "")
-           to_return.latitude = latitude;
+           to_return.setLatitude(latitude);
 
         String longitude = ((Element)doc.getElementsByTagName("Location").item(0)).getAttribute("Longitude");
         if(longitude != "")
-            to_return.longitude = longitude;
-
+            to_return.setLongitude(longitude);
 
         String country = doc.getElementsByTagName("Country").item(0).getTextContent();
-        to_return.country = country;
+        to_return.setCountry(country);
 
         //description
         try
         {
             String desc = doc.getElementsByTagName("Description").item(0).getTextContent();
             //Check for the description length and cut it down
-            to_return.decription = desc;
+            to_return.setDecription(desc);
         }
-        catch(NullPointerException n){
-              to_return.decription = "";
+        catch(NullPointerException n)
+        {
+            to_return.setDecription("");
         }    
            
-        //fill up the caetgories now.
-        
+        //fill up the caetgories
         NodeList categories = doc.getElementsByTagName("Category");  
         for(int i = 0; i < categories.getLength(); i++)
         {
-            to_return.categories.add(categories.item(i).getTextContent());
+            to_return.addToCategories(categories.item(i).getTextContent());
         }
-    
-        // //fill up bids now
-        // Element bids = getElementByTagNameNR(item, "Bids");
-        // Element[] allBids = getElementsByTagNameNR(bids, "Bid");
-        // if (to_return.bids.length != allBids.length)
-        // {
-        //     to_return.bids = null;
-        // }
         
-        // int k = 0;
-        // try
-        // {
-        //     for(Element e : allBids)
-        //     {
-        //         Element currBidder = getElementByTagNameNR(e,"Bidder");
-        //         String currBidderUserID = currBidder.getAttribute("UserID");
-        //         String currBidderRating = currBidder.getAttribute("Rating");
-        //         String bidderLocation = getElementTextByTagNameNR(currBidder,"Location"); 
-        //         String bidderCountry =  getElementTextByTagNameNR(currBidder,"Country");
-        //         String currBidTime = changeTimeFormat(getElementTextByTagNameNR(e, "Time"));
-        //         String bidAmount = getElementTextByTagNameNR(e, "Amount");
-        //         //set the bid object 
-        //         to_return.bids[k].bidder_id = currBidderUserID; 
-        //         to_return.bids[k].bid_date = new Date(currBidTime);
-        //         to_return.bids[k].amount = Double.parseDouble(bidAmount);
-        //         to_return.bids[k].bidder_rating = Integer.parseInt(currBidderRating);
-        //         to_return.bids[k].location = bidderLocation;
-        //         to_return.bids[k].country = bidderCountry;
-        //     }
-        // }
-        // catch(ParseException t){
-        //     System.out.println(t);
-        // }
+        Element rootBid = (Element)doc.getElementsByTagName("Bids").item(0);
+        Element[] bids = (Element[])getElementsByTagNameNR(rootBid, "Bid");
+        if(bids.length > 0)
+        {
+            for(Element e: bids)
+            {
+                Bid temp = new Bid();
+                String currBidderUserID = ((Element)e.getElementsByTagName("Bidder").item(0)).getAttribute("UserID"); 
+                String currBidderRating = ((Element)e.getElementsByTagName("Bidder").item(0)).getAttribute("Rating"); 
+                
+                Element rootBidder = (Element)e.getElementsByTagName("Bidder").item(0);
+                Element[] bidLocation = (Element[])getElementsByTagNameNR(rootBidder, "Location");
+                Element[] bidCountry = (Element[])getElementsByTagNameNR(rootBidder, "Country");
+
+                String bidderLocation = bidLocation[0].getTextContent();
+                String bidderCountry =  bidCountry[0].getTextContent();
+                
+                String bidAmount = ((Element)e.getElementsByTagName("Amount").item(0)).getTextContent().substring(1);
+                Date currBidTime = null;
+                try
+                {
+                    currBidTime = changeTimeFormat(((Element)e.getElementsByTagName("Time").item(0)).getTextContent());
+                }
+                catch(Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+                //set the bid object 
+                temp.setBidder_id(currBidderUserID); 
+                temp.setBid_date(currBidTime);
+                temp.setAmount(Double.parseDouble(bidAmount));
+                temp.setBidder_rating(Integer.parseInt(currBidderRating));
+                temp.setLocation(bidderLocation);
+                temp.setCountry(bidderCountry);
+                to_return.addToBids(temp);
+            }
+        }
         return to_return;
-   }
-       
-   // changes xml date to yyyy-MM-dd HH:mm:ss
-   public static Date changeTimeFormat(String t) throws ParseException
-   {
-       DateFormat xmlDate = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
-       DateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-       return newDate.parse(newDate.format(xmlDate.parse(t)));
    }
 }
