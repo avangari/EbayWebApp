@@ -147,11 +147,11 @@ class MyParser
         
         //Getting the latitude and longitude
         String latitude = getElementByTagNameNR(item,"Location").getAttribute("Latitude");
-        
+        if(latitude != null)
            to_return.setLatitude(latitude);
 
         String longitude = getElementByTagNameNR(item,"Location").getAttribute("Longitude");
-       
+        if(longitude != null )
             to_return.setLongitude(longitude);
 
         String country = doc.getElementsByTagName("Country").item(0).getTextContent();
