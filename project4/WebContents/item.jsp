@@ -63,11 +63,7 @@
   				no_coordinates();
   			}
   		}
-  			
-  			
-  			
-    		
-  			
+
   			//if no latitude or longitude specified
   			function no_coordinates()
   			{
@@ -111,23 +107,9 @@
     			
     				google.maps.event.trigger(map, "resize");
     			
-<<<<<<< HEAD
     		  	});
   				
-  			}
   			
-  			
-    		
-    		
-    		
-    		
-  		
-  		
-  		
-=======
-    		  });	
-  		} 	
->>>>>>> b706da35aa1a27301684780c1764b499896e64b4
 	</script> 
 </head>
 <body onload="initialize()">
@@ -137,27 +119,6 @@
 		<input type="submit"/>
 	</form>
 	<% Item item = (Item)request.getAttribute("item"); %>
-<<<<<<< HEAD
-	<p><strong>ID: </strong><%= item.getItem_ID() %></p>
-	<p><strong>Item: </strong><%= item.getName() %></p>
-	<p><strong>Current Bid: </strong>$<%= item.getCurrent_bid() %></p>
-	<p><strong>First Bid: </strong>$<%= item.getFirst_bid() %></p>
-	<p><strong>Number of Bids: </strong><%= item.getNo_of_bids() %></p>
-	
-	<strong>Location: </strong> <p id="location"><%= item.getLocation()%></p>
-	
-	
-	<strong>Country: </strong> <p id = "country"><%= item.getCountry() %></p>	
-	
-	<%if(item.getLatitude() != ""){%>
-	  	<strong>Latitude: </strong><p id="latitude"><%= item.getLatitude()%></p>
-	<%}%>	
-	
-	<%if(item.getLongitude() != ""){%>
-	  	<strong>Longitude: </strong><p id="longitude"><%= item.getLongitude()%></p>
-	<%}%>	
-	<div id = "map-canvas" > </div>
-=======
 	<div id="rightContent">
 		<% if(item.getBidLength() > 0) {%>
 	    	<p><strong>Bids:</strong></p>   
@@ -204,8 +165,6 @@
 		<%if(item.getLongitude() != ""){%>
 		  	<strong>Longitude: </strong><p id="log"><%= item.getLongitude()%></p>
 		<%}%>	
->>>>>>> b706da35aa1a27301684780c1764b499896e64b4
-
 		<p><strong>Start Date: </strong><%= item.getStarted() %></p>
 		<p><strong>End Date: </strong><%= item.getEnds() %></p>
 		<p><strong>Seller ID: </strong><%= item.getSeller_id() %></p>
