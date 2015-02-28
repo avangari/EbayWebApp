@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SearchServlet extends HttpServlet implements Servlet {
-       
+public class SearchServlet extends HttpServlet implements Servlet
+{       
     public SearchServlet() {}
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -23,10 +23,7 @@ public class SearchServlet extends HttpServlet implements Servlet {
     	
     	request.setAttribute("sr",AuctionSearchClient.basicSearch(query,numResultsToSkip,numResultsToReturn));
     	
-    
-    	
     	request.getRequestDispatcher("/results.jsp").forward(request, response);
-        
     }
 }
 
