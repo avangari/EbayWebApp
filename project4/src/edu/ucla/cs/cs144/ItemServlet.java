@@ -136,8 +136,18 @@ class MyParser
         to_return.setSeller_id(((Element)doc.getElementsByTagName("Seller").item(0)).getAttribute("UserID"));
         to_return.setSeller_rating(Integer.parseInt(((Element)doc.getElementsByTagName("Seller").item(0)).getAttribute("Rating")));  
 
-        to_return.setLocation(doc.getElementsByTagName("Location").item(0).getTextContent());
+        NodeList locList = doc.getElementsByTagName("Location");
+        NodeList couList = doc.getElementsByTagName("Country");
+        if(locList.getLength() > 1)
+            to_return.setLocation(doc.getElementsByTagName("Location").item(locList.getLength()-1).getTextContent());
+        else
+            to_return.setLocation(doc.getElementsByTagName("Location").item(0).getTextContent());
         
+        if(couList.getLength() > 1)
+            to_return.setCountry(doc.getElementsByTagName("Country").item(couList.getLength()-1).getTextContent());
+        else
+            to_return.setCountry(doc.getElementsByTagName("Country").item(0).getTextContent());
+
         //Getting the latitude and longitude
         String latitude = getElementByTagNameNR(item,"Location").getAttribute("Latitude");
         if(latitude != null)
@@ -146,9 +156,6 @@ class MyParser
         String longitude = getElementByTagNameNR(item,"Location").getAttribute("Longitude");
         if(longitude != null )
             to_return.setLongitude(longitude);
-
-        String country = doc.getElementsByTagName("Country").item(0).getTextContent();
-        to_return.setCountry(country);
 
         //description
         try
@@ -182,9 +189,12 @@ class MyParser
                 Element rootBidder = (Element)e.getElementsByTagName("Bidder").item(0);
                 Element[] bidLocation = (Element[])getElementsByTagNameNR(rootBidder, "Location");
                 Element[] bidCountry = (Element[])getElementsByTagNameNR(rootBidder, "Country");
+                String bidderLocation = "";
+                String bidderCountry = "";
 
-                String bidderLocation = bidLocation[0].getTextContent();
-                String bidderCountry =  bidCountry[0].getTextContent();
+                bidderLocation = bidLocation[0].getTextContent();
+                
+                bidderCountry =  bidCountry[0].getTextContent();
                 
                 String bidAmount = ((Element)e.getElementsByTagName("Amount").item(0)).getTextContent().substring(1);
                 Date currBidTime = null;

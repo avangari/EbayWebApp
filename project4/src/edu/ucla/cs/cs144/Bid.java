@@ -44,7 +44,10 @@ public class Bid
     }
 
     public String getLocation() {
-        return location;
+        if(location != null && !location.isEmpty() && !location.equals("null"))
+            return location;
+        else
+            return "unavailable";
     }
 
     public void setLocation(String location) {
@@ -52,7 +55,10 @@ public class Bid
     }
 
     public String getCountry() {
-        return country;
+        if(country != null && !country.isEmpty() && !country.equals("null"))
+            return country;
+        else
+            return "unavailable";            
     }
 
     public void setCountry(String country) {

@@ -1,4 +1,4 @@
-table.bidtable {
+table.bidTable {
 	font-family: verdana,arial,sans-serif;
 	font-size:11px;
 	color:#333333;
@@ -6,24 +6,20 @@ table.bidtable {
 	border-color: #666666;
 	border-collapse: collapse;
 }
-table.bidtable th {
+table.bidTable th {
 	border-width: 1px;
 	padding: 8px;
 	border-style: solid;
 	border-color: #666666;
 	background-color: #dedede;
 }
-table.bidtable td {
+table.bidTable td {
 	border-width: 1px;
 	padding: 8px;
 	border-style: solid;
 	border-color: #666666;
 	background-color: #ffffff;
 }
-
-html { height: 100%; width : 100%;}
-body { height: 100%; width : 100% ;margin: 0; padding: 0;}
-/*#map-canvas { height: 50%; width:25%; }*/
 
 #rightContent{
 	float:right;

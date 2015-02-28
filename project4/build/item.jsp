@@ -1,46 +1,51 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title> Item data </title>
- 	<%@ page import="edu.ucla.cs.cs144.Item" %>
-	<%@ page import="edu.ucla.cs.cs144.Bid" %>
+ 	 <%@ page import="edu.ucla.cs.cs144.Item" %>
+	 <%@ page import="edu.ucla.cs.cs144.Bid" %>
 	<link rel="stylesheet" type="text/css" href="styles.css">
-	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"> </script> 
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
+     
+	<script type="text/javascript" 
+ 	   src="http://maps.google.com/maps/api/js?sensor=false"> 
+	</script> 
 	<script type="text/javascript"> 
-	  var lat = 0;
-	  var log = 0;
-	  function initialize() { 
-	  	//lat = document.getElementById("lat").innerHTML;
-	  	//log = document.getElementById("log").innerHTML;
-	  	alert("beforeCall");
-	    getLatLngFromAddress("Los Angeles", "USA");
-	    // alert(lat+" "log);
-	    // var latlng = new google.maps.LatLng(lat,log); 
-	    // var myOptions = { 
-	    //   zoom: 14, // default is 8  
-	    //   center: latlng, 
-	    //   mapTypeId: google.maps.MapTypeId.ROADMAP 
-	    // }; 
-	    // var map = new google.maps.Map(document.getElementById("map_canvas"), 
-	    //     myOptions); 
-	  }
-	  function getLatLngFromAddress(city, country)
-	  {
-		  var address = city +", "+ country;
-		  var geocoder = new google.maps.Geocoder();
-		  geocoder.geocode( { 'address': address}, function(results, status) 
-		  {
-		    if (status == google.maps.GeocoderStatus.OK) 
-		    {
-		      alert(val(results[0].geometry.location.Pa));
-		      //log = val(results[0].geometry.location.Qa);
-		      //alert(lat+" "+log);
-		    } 
-		    else 
-		    {
-		      alert("Geocode was not successful for the following reason: " + status);
-		    }
-		  });
-	  } 
+  		function initialize() { 
+  			var lat = Number( document.getElementById('latitude').textContent );
+  			var lon = Number( document.getElementById('longitude').textContent );
+    		var latlng = new google.maps.LatLng(lat,lon); 
+    		var myOptions = { 
+      			zoom: 14, // default is 8  
+      			center: latlng, 
+      			mapTypeId: google.maps.MapTypeId.ROADMAP 
+   		 	}; 
+    		var map = new google.maps.Map(document.getElementById("map-canvas"), 
+        				myOptions); 
+    		
+    		var marker = new google.maps.Marker({
+    		    position: map.getCenter(),
+    		    map: map,
+    		    title: 'Click to zoom'
+    		  });
+    		
+    		google.maps.event.addListener(map, 'mouseover', function() {
+      		   
+    			document.getElementById("map-canvas").style.width = '100%';
+    			
+    			google.maps.event.trigger(map, "resize");
+    			
+    		  });
+    		
+
+    		google.maps.event.addListener(map, 'mouseout', function() {
+      		   
+    			document.getElementById("map-canvas").style.width = '25%';
+    			
+    			google.maps.event.trigger(map, "resize");
+    			
+    		  });	
+  		} 	
 	</script> 
 </head>
 <body onload="initialize()">
@@ -66,21 +71,13 @@
 						<td><%= b.getBidder_id()%></td>
 						<td><%= b.getBidder_id()%></td>
 						<td>$<%= b.getAmount()%></td>
-						<%if(item.getLocation() != ""){%>
 						  	<td><%= b.getLocation()%></td>
-						<%}else{%>
-						  <td><i>unavailable</i></td> 
-						<%}%>	
-						<%if(item.getCountry() != ""){%>
 						  	<td><%= b.getCountry()%></td>
-						<%}else{%>
-						  <td><i>unavailable</i></td> 
-						<%}%>
 					</tr>
 				<%}%>
-			</table> <br/><br/>
+				</table> <br/><br/>
 			<%}%>
-			<div id="map_canvas" style="width:100%; height:50%"></div> 
+			<div id = "map-canvas" > </div>
 	</div>
 	<div id="leftContent">
 		<p><strong>Item: </strong><%= item.getName() %></p>

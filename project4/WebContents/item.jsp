@@ -174,19 +174,11 @@
 						<td><%= b.getBidder_id()%></td>
 						<td><%= b.getBidder_id()%></td>
 						<td>$<%= b.getAmount()%></td>
-						<%if(item.getLocation() != ""){%>
 						  	<td><%= b.getLocation()%></td>
-						<%}else{%>
-						  <td><i>unavailable</i></td> 
-						<%}%>	
-						<%if(item.getCountry() != ""){%>
 						  	<td><%= b.getCountry()%></td>
-						<%}else{%>
-						  <td><i>unavailable</i></td> 
-						<%}%>
 					</tr>
 				<%}%>
-			</table> <br/><br/>
+				</table> <br/><br/>
 			<%}%>
 			<div id = "map-canvas" > </div>
 	</div>
