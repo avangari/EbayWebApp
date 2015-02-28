@@ -20,3 +20,12 @@ table.bidtable td {
 	border-color: #666666;
 	background-color: #ffffff;
 }
+
+#rightContent{
+	float:right;
+	width:50%;
+}
+#leftContent{
+	float:left;
+	width:50%;
+}

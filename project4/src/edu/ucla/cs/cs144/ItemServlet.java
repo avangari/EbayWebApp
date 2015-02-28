@@ -1,12 +1,3 @@
-// package edu.ucla.cs.cs144;
-
-// import java.util.LinkedList;
-// import java.util.Vector;
-// import java.io.IOException;
-// import java.io.StringReader;
-// import java.util.Date;
-// import java.text.DateFormat;
-// import java.text.SimpleDateFormat;
 package edu.ucla.cs.cs144;
 
 import java.util.LinkedList;
@@ -49,7 +40,7 @@ public class ItemServlet extends HttpServlet implements Servlet
     public ItemServlet() {}
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        response.setContentType("text/html");
+        //response.setContentType("text/html");
         String ID = request.getParameter("itemId");
         String xmlString = AuctionSearchClient.getXMLDataForItemId(ID);
         Item item = MyParser.loadXMLFromString(xmlString);
@@ -137,8 +128,10 @@ class MyParser
         
         /******* if the Buy price is specified, use it***/
         if(doc.getElementsByTagName("Buy_Price").item(0) != null)
-            to_return.setBuy_price(Double.parseDouble(doc.getElementsByTagName("Buy_Price").item(0).getTextContent().substring(1)));
-        
+        {
+            if(Double.parseDouble(doc.getElementsByTagName("Buy_Price").item(0).getTextContent().substring(1)) >= 0.0)
+                to_return.setBuy_price(Double.parseDouble(doc.getElementsByTagName("Buy_Price").item(0).getTextContent().substring(1)));
+        }
         to_return.setNo_of_bids(Integer.parseInt(doc.getElementsByTagName("Number_of_Bids").item(0).getTextContent()));
         to_return.setSeller_id(((Element)doc.getElementsByTagName("Seller").item(0)).getAttribute("UserID"));
         to_return.setSeller_rating(Integer.parseInt(((Element)doc.getElementsByTagName("Seller").item(0)).getAttribute("Rating")));  
