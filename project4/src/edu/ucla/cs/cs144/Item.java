@@ -2,6 +2,8 @@ package edu.ucla.cs.cs144;
 
 import java.util.LinkedList;
 import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import edu.ucla.cs.cs144.Bid;
 
 public class Item
@@ -181,6 +183,16 @@ public class Item
 
     public void setDecription(String decription) {
         this.decription = decription;
+    }
+    
+    public void sortBids()
+    {
+    	Collections.sort(bids, new Comparator<Bid>() {
+    		  public int compare(Bid o1, Bid o2) {
+    		      return o1.getBid_date().compareTo(o2.getBid_date());
+    		  }
+    		});
+    	
     }
 
     public String printAll()

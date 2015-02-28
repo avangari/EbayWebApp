@@ -197,7 +197,8 @@ class MyParser
                 Date currBidTime = null;
                 try
                 {
-                    currBidTime = changeTimeFormat(((Element)e.getElementsByTagName("Time").item(0)).getTextContent());
+                    currBidTime = changeTimeFormat( ((Element)e.getElementsByTagName("Time").item(0)).getTextContent() );
+                   
                 }
                 catch(Exception ex)
                 {
@@ -210,9 +211,11 @@ class MyParser
                 temp.setBidder_rating(Integer.parseInt(currBidderRating));
                 temp.setLocation(bidderLocation);
                 temp.setCountry(bidderCountry);
+                
                 to_return.addToBids(temp);
             }
         }
+        to_return.sortBids();
         return to_return;
    }
 }
