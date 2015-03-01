@@ -33,8 +33,6 @@ public class Item
         longitude = "";
         buy_price = -1.0;
         bids = new LinkedList();
-        location = "";
-        country = "";
     }
 
     public int getBidLength()

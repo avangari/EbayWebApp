@@ -5,17 +5,14 @@
  	 <%@ page import="edu.ucla.cs.cs144.Item" %>
 	 <%@ page import="edu.ucla.cs.cs144.Bid" %>
 	<link rel="stylesheet" type="text/css" href="styles.css">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
-     
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
 	<script type="text/javascript" 
  	   src="http://maps.google.com/maps/api/js?sensor=false&key=AIzaSyCizZ44XO3l_pPhWxQ3tw7kpR0GqIW6GCI"> 
 	</script> 
 	<script type="text/javascript"> 
-	
-		var map;
+		  var map;
   		function initialize() 
   		{ 
-  			
   			try
   			{
   			 	var lat_value = Number( document.getElementById('latitude').textContent );
@@ -108,8 +105,6 @@
     				google.maps.event.trigger(map, "resize");
     			
     		  	});
-  				
-  			
 	</script> 
 </head>
 <body onload="initialize()">
@@ -119,57 +114,57 @@
 		<input type="submit"/>
 	</form>
 	<% Item item = (Item)request.getAttribute("item"); %>
-	<div id="rightContent">
-		<% if(item.getBidLength() > 0) {%>
-	    	<p><strong>Bids:</strong></p>   
-		    <table class="bidTable">
-			    <tr>
-			        <th>Bidder ID</th>
-			        <th>Bidder Rating</th>
-			        <th>Bid Amount</th>
-			       	<th>Bidder Location</th>
-			        <th>Bidder Country</th>
-			    </tr>
-				<% for(Bid b : item.getBids()) {%>
-					<tr>
-						<td><%= b.getBidder_id()%></td>
-						<td><%= b.getBidder_id()%></td>
-						<td>$<%= b.getAmount()%></td>
-						  	<td><%= b.getLocation()%></td>
-						  	<td><%= b.getCountry()%></td>
-					</tr>
-				<%}%>
-				</table> <br/><br/>
-			<%}%>
-			<div id = "map-canvas" > </div>
-	</div>
-	<div id="leftContent">
-		<p><strong>Item: </strong><%= item.getName() %></p>
-		<%if(item.getBuy_price() >= 0.0){%>
-			<p><strong>Buy Price: </strong>$<%= item.getBuy_price() %></p>
-		<%}else{%>
-			<p><strong>Buy Price: </strong><i>unavailable</i></p>
-			<%}%>
-		<p><strong>Current Bid: </strong>$<%= item.getCurrent_bid() %></p>
-		<p><strong>First Bid: </strong>$<%= item.getFirst_bid() %></p>
-		<p><strong>Number of Bids: </strong><%= item.getNo_of_bids() %></p>
-		<%if(item.getLocation() != ""){%>
-		  	<p><strong>Location: </strong><%= item.getLocation()%></p>
-		<%}%>
-		<p><strong>Country: </strong><%= item.getCountry() %></p>	
+  	<div id="rightContent">
+  		<% if(item.getBidLength() > 0) {%>
+  	    	<p><strong>Bids:</strong></p>   
+  		    <table class="bidTable">
+  			    <tr>
+  			        <th>Bidder ID</th>
+  			        <th>Bidder Rating</th>
+  			        <th>Bid Amount</th>
+  			       	<th>Bidder Location</th>
+  			        <th>Bidder Country</th>
+  			    </tr>
+  				<% for(Bid b : item.getBids()) {%>
+  					<tr>
+  						<td><%= b.getBidder_id()%></td>
+  						<td><%= b.getBidder_id()%></td>
+  						<td>$<%= b.getAmount()%></td>
+  				  	<td><%= b.getLocation()%></td>
+  				  	<td><%= b.getCountry()%></td>
+  					</tr>
+  				<%}%>
+  				</table> <br/><br/>
+  			<%}%>
+  			<div id = "map-canvas" ></div>
+  	</div>
+  	<div id="leftContent">
+  		<p><strong>Item: </strong><%= item.getName() %></p>
+  		<%if(item.getBuy_price() >= 0.0){%>
+  			<p><strong>Buy Price: </strong>$<%= item.getBuy_price() %></p>
+  		<%}else{%>
+  			<p><strong>Buy Price: </strong><i>unavailable</i></p>
+  			<%}%>
+  		<p><strong>Current Bid: </strong>$<%= item.getCurrent_bid() %></p>
+  		<p><strong>First Bid: </strong>$<%= item.getFirst_bid() %></p>
+  		<p><strong>Number of Bids: </strong><%= item.getNo_of_bids() %></p>
+  		<%if(item.getLocation() != ""){%>
+  		  	<p><strong>Location: </strong><%= item.getLocation()%></p>
+  		<%}%>
+  		<p><strong>Country: </strong><%= item.getCountry() %></p>	
 
-		<%if(item.getLatitude() != ""){%>
-		  	<strong>Latitude: </strong><p id="lat"><%= item.getLatitude()%></p>
-		<%}%>	
-		
-		<%if(item.getLongitude() != ""){%>
-		  	<strong>Longitude: </strong><p id="log"><%= item.getLongitude()%></p>
-		<%}%>	
-		<p><strong>Start Date: </strong><%= item.getStarted() %></p>
-		<p><strong>End Date: </strong><%= item.getEnds() %></p>
-		<p><strong>Seller ID: </strong><%= item.getSeller_id() %></p>
-		<p><strong>Seller Rating: </strong><%= item.getSeller_rating() %></p>
-		<p><strong>Item Description: </strong><%= item.getDecription() %></p><br/>
-	</div>
+  		<%if(item.getLatitude() != ""){%>
+  		  	<strong>Latitude: </strong><p id="lat"><%= item.getLatitude()%></p>
+  		<%}%>	
+  		
+  		<%if(item.getLongitude() != ""){%>
+  		  	<strong>Longitude: </strong><p id="log"><%= item.getLongitude()%></p>
+  		<%}%>	
+  		<p><strong>Start Date: </strong><%= item.getStarted() %></p>
+  		<p><strong>End Date: </strong><%= item.getEnds() %></p>
+  		<p><strong>Seller ID: </strong><%= item.getSeller_id() %></p>
+  		<p><strong>Seller Rating: </strong><%= item.getSeller_rating() %></p>
+  		<p><strong>Item Description: </strong><%= item.getDecription() %></p><br/>
+  	</div>
 </body>
 </html>

@@ -1,12 +1,20 @@
 package edu.ucla.cs.cs144;
 
 import java.io.IOException;
+import java.io.PrintWriter;;
 import java.net.HttpURLConnection;
+import java.net.URLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import org.omg.CORBA.portable.InputStream;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.omg.CORBA.portable.InputStream;
 
 public class ProxyServlet extends HttpServlet implements Servlet {
        
@@ -14,6 +22,29 @@ public class ProxyServlet extends HttpServlet implements Servlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // your codes here
+    
+    	response.setContentType("text/xml");
+    	String query_input = request.getParameter("q");
+    	
+    	String url =  "http://google.com/complete/search?output=toolbar&";
+    	//String charset = "UTF-8";
+    	String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+    	
+    	
+    	String query = String.format("q=%s", URLEncoder.encode(query_input, charset));
+    	
+    	URLConnection connection = new URL(url + query).openConnection();
+    	connection.setRequestProperty("Accept-Charset", charset);
+    	InputStream response_google = (InputStream)connection.getInputStream();;
+    	String xmlResponse = "";
+    	for(int i=0;i<response_google.available();i++)
+    	{
+    		xmlResponse = xmlResponse+response_google.read();
+    		
+    	}
+    	
+    	PrintWriter out = response.getWriter();
+    	out.print(xmlResponse);
+    	
     }
 }
