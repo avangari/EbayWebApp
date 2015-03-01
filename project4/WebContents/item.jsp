@@ -178,7 +178,7 @@
 					<td><%= b.getBidder_rating()%></td>
 					<td>$<%= b.getAmount()%></td>
 					<td><%= b.getBid_date()%></td>
-					<%if(item.getLocation() != ""){%>
+					<%if(b.getLocation() != ""){%>
 					  	<td><%= b.getLocation()%></td>
 					<%}else{%>
 					  <td><i>unavailable</i></td> 
