@@ -44,7 +44,7 @@ public class ProxyServlet extends HttpServlet implements Servlet {
     	}
     	
     	PrintWriter out = response.getWriter();
-    	out.println(xmlResponse);
+    	out.print(xmlResponse);
     	
     }
 }

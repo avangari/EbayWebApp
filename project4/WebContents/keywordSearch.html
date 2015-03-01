@@ -5,7 +5,7 @@
 		
 		function sendAjaxRequest(input)
 		{
-			var request = "/suggest?q="+encodeURI(input);
+			var request = "suggest?q="+encodeURI(input);
 			
 			xmlHttp.open("GET",request);
 			xmlHttp.onreadystatechange = showSuggestion;
@@ -17,10 +17,20 @@
 		{
 			 if(xmlHttp.readyState == 4)
 				 {
-				 	response = xmlHttp.responseText;
-				 	response = response.replace(/</g,"&lt;");
-				 	response = response.replace(/>/g,"&gt;");
-				 	document.getElementbyId("suggestion").innerHTML = response;
+				// get the CompleteSuggestion elements from the response
+				    var s = xmlHttp.responseXML.getElementsByTagName('CompleteSuggestion');
+				 	alert("hello");
+				    // construct a bullet list from the suggestions
+				    var htmlCode = "<ul>";
+				    for (i = 0; i < s.length; i++) {
+				       var text = s[i].childNodes[0].getAttribute("data");
+
+				       htmlCode += "<li><b>" + text + "</b></li>";
+				    }
+				    htmlCode += "</ul>";
+
+				    // display the list on the page
+				    document.getElementById("suggestion").innerHTML = htmlCode;
 				 }
 		}
 	
@@ -29,12 +39,13 @@
     <body>
     	<h1>Keyword Search</h1>
     	<form action="/eBay/search" method="GET">
-    		Keyword Search: <input type="text" name="q" id="q" onKeyUp = "sendAjaxRequest(this.value); "/> <br />
+    		Keyword Search: <input type="text" name="q" id="q" onkeyup = "sendAjaxRequest(this.value); "/> <br />
     		<input type="hidden" name="numResultsToSkip" value="0"/>
 			<input type="hidden" name="numResultsToReturn" value="10"/><br/>
     		<input type="submit"/>
     		
-    		<strong>Suggestion :  </strong> <pre id= "suggestion"> </pre>
+    		
     	</form>
+    	<strong>Suggestion :  </strong> <pre id= "suggestion"> </pre>
     </body>
 </html>
