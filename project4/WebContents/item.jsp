@@ -18,7 +18,6 @@
   			 	var lat_value = Number( document.getElementById('latitude').textContent );
   			 	var lon_value = Number( document.getElementById('longitude').textContent );
   			 	if( (lat_value > 90) || (lat_value < -90) || (lon_value > 180) || (lon_value <180) ){
-  			 		
   			 		no_coordinates();
   			 		return;
   			 	}
@@ -136,7 +135,7 @@
   				<%}%>
   				</table> <br/><br/>
   			<%}%>
-  			<div id = "map-canvas" ></div>
+  			<div id="map-canvas"></div>
   	</div>
   	<div id="leftContent">
   		<p><strong>Item: </strong><%= item.getName() %></p>
@@ -149,16 +148,15 @@
   		<p><strong>First Bid: </strong>$<%= item.getFirst_bid() %></p>
   		<p><strong>Number of Bids: </strong><%= item.getNo_of_bids() %></p>
   		<%if(item.getLocation() != ""){%>
-  		  	<p><strong>Location: </strong><%= item.getLocation()%></p>
+  		  	<strong>Location: </strong><p id = "location"><%= item.getLocation()%></p>
   		<%}%>
-  		<p><strong>Country: </strong><%= item.getCountry() %></p>	
+  		<strong>Country: </strong><p id = "country"><%= item.getCountry() %></p>	
 
   		<%if(item.getLatitude() != ""){%>
-  		  	<strong>Latitude: </strong><p id="lat"><%= item.getLatitude()%></p>
+  		  	<strong>Latitude: </strong><p id="latitude"><%= item.getLatitude()%></p>
   		<%}%>	
-  		
   		<%if(item.getLongitude() != ""){%>
-  		  	<strong>Longitude: </strong><p id="log"><%= item.getLongitude()%></p>
+  		  	<strong>Longitude: </strong><p id="longitude"><%= item.getLongitude()%></p>
   		<%}%>	
   		<p><strong>Start Date: </strong><%= item.getStarted() %></p>
   		<p><strong>End Date: </strong><%= item.getEnds() %></p>
