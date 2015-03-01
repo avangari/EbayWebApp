@@ -1,12 +1,40 @@
 <html>
 	<head><title>Keyword Search</title></head>
+	<script type="text/javascript">
+		var xmlHttp = new XMLHttpRequest();
+		
+		function sendAjaxRequest(input)
+		{
+			var request = "/suggest?q="+encodeURI(input);
+			
+			xmlHttp.open("GET",request);
+			xmlHttp.onreadystatechange = showSuggestion;
+			xmlHttp.send(null);
+			
+		}
+		
+		function showSuggestion()
+		{
+			 if(xmlHttp.readyState == 4)
+				 {
+				 	response = xmlHttp.responseText;
+				 	response = response.replace(/</g,"&lt;");
+				 	response = response.replace(/>/g,"&gt;");
+				 	document.getElementbyId("suggestion").innerHTML = response;
+				 }
+		}
+	
+	</script>
+	
     <body>
     	<h1>Keyword Search</h1>
     	<form action="/eBay/search" method="GET">
-    		Keyword Search: <input type="text" name="q" id="q"/> <br />
+    		Keyword Search: <input type="text" name="q" id="q" onKeyUp = "sendAjaxRequest(this.value); "/> <br />
     		<input type="hidden" name="numResultsToSkip" value="0"/>
-			<input type="hidden" name="numResultsToReturn" value="20"/><br/>
+			<input type="hidden" name="numResultsToReturn" value="10"/><br/>
     		<input type="submit"/>
+    		
+    		<strong>Suggestion :  </strong> <pre id= "suggestion"> </pre>
     	</form>
     </body>
 </html>
