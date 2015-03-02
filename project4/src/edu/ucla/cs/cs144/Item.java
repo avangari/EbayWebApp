@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.Date;
 import java.util.Collections;
 import java.util.Comparator;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import edu.ucla.cs.cs144.Bid;
 
 public class Item
@@ -112,6 +114,7 @@ public class Item
     }
 
     public LinkedList<Bid> getBids() {
+        Collections.sort(this.bids);
         return bids;
     }
 
@@ -152,7 +155,7 @@ public class Item
     }
 
     public String getStarted() {
-        return started.toString();
+        return (new SimpleDateFormat("EEE, MMM d yyyy, hh:mm aaa").format(this.started));
     }
 
     public void setStarted(Date started) {
@@ -160,7 +163,7 @@ public class Item
     }
 
     public String getEnds() {
-        return ends.toString();
+        return (new SimpleDateFormat("EEE, MMM d yyyy, hh:mm aaa").format(this.ends));
     }
 
     public void setEnds(Date ends) {
@@ -191,14 +194,14 @@ public class Item
         this.decription = decription;
     }
     
-    public void sortBids()
-    {
-    	Collections.sort(bids, new Comparator<Bid>() {
-    		  public int compare(Bid o1, Bid o2) {
-    		      return o1.getBid_date().compareTo(o2.getBid_date());
-    		  }
-    		});
-    }
+    // public void sortBids()
+    // {
+    // 	Collections.sort(bids, new Comparator<Bid>() {
+    // 		  public int compare(Bid o1, Bid o2) {
+    // 		      return o1.getBid_date().compareTo(o2.getBid_date());
+    // 		  }
+    // 		});
+    // }
 
     public String printAll()
     {

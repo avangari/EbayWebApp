@@ -15,27 +15,36 @@ public class SearchServlet extends HttpServlet implements Servlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-    	response.setContentType("text/html");
-    	String query = request.getParameter("q");
-    	int numResultsToSkip = Integer.parseInt(request.getParameter("numResultsToSkip"));
-    	int numResultsToReturn = Integer.parseInt(request.getParameter("numResultsToReturn"))+1;
-    	SearchResult[] results = AuctionSearchClient.basicSearch(query,numResultsToSkip,numResultsToReturn);
+        response.setContentType("text/html");
+        String query = request.getParameter("q").trim();
+        int numResultsToSkip = Integer.parseInt(request.getParameter("numResultsToSkip"));
+        int numResultsToReturn = Integer.parseInt(request.getParameter("numResultsToReturn"))+1;
+        SearchResult[] results = AuctionSearchClient.basicSearch(query,numResultsToSkip,numResultsToReturn);
         SearchResult[] modifiedResults = null;
-        
-        if(results.length > numResultsToReturn-1)
+        if(results.length == 0)
         {
-    	   request.setAttribute("toskip", true);
-           modifiedResults = new SearchResult[results.length-1];
-           System.arraycopy(results, 0, modifiedResults, 0, results.length-1);
+            request.setAttribute("no_result",true);
         }
+        
         else
         {
-            request.setAttribute("toskip", false);
-            modifiedResults = new SearchResult[results.length];
-            System.arraycopy(results, 0, modifiedResults, 0, results.length);
+            request.setAttribute("no_result",false);
+            if(results.length > numResultsToReturn-1)
+            {
+               request.setAttribute("toskip", true);
+               modifiedResults = new SearchResult[results.length-1];
+               System.arraycopy(results, 0, modifiedResults, 0, results.length-1);
+            }
+            else
+            {
+                request.setAttribute("toskip", false);
+                modifiedResults = new SearchResult[results.length];
+                System.arraycopy(results, 0, modifiedResults, 0, results.length);
+            }
+
         }
         request.setAttribute("sr",modifiedResults);
-    	request.getRequestDispatcher("/results.jsp").forward(request, response);
+        request.getRequestDispatcher("/results.jsp").forward(request, response);
     }
 }
 

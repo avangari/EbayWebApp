@@ -6,70 +6,10 @@
 	 <%@ page import="edu.ucla.cs.cs144.Bid" %>
 	<link rel="stylesheet" type="text/css" href="styles.css">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
-     
 	<script type="text/javascript" 
  	   src="http://maps.google.com/maps/api/js?sensor=false&key=AIzaSyCizZ44XO3l_pPhWxQ3tw7kpR0GqIW6GCI"> 
 	</script> 
-	<script type="text/javascript"> 
-	
-		var map;
-  		function initialize() 
-  		{ 
-  			try
-  			{
-  			 	var lat_value = Number( document.getElementById('latitude').textContent );
-  			 	var lon_value = Number( document.getElementById('longitude').textContent );
-  			 	if( (lat_value > 90) || (lat_value < -90) || (lon_value > 180) || (lon_value <180) ){
-  			 		no_coordinates();
-  			 		return;
-  			 	}
-  			 	
-  				var latlng = new google.maps.LatLng(lat_value,lon_value); 
-    			var myOptions = { 
-      				zoom: 10, // default is 8  
-      				center: latlng, 
-      				mapTypeId: google.maps.MapTypeId.ROADMAP 
-   		 		}; 
-    		 	 map = new google.maps.Map(document.getElementById("map-canvas"), 
-        					myOptions); 
-    		
-    			var marker = new google.maps.Marker({
-    		    	position: map.getCenter(),
-    		    	map: map,
-    		    	title: 'Click to zoom'
-    		  	}); 
-  			}
-  			catch(err){
-  				no_coordinates();
-  			}
-  		}
-  			//if no latitude or longitude specified
-  			function no_coordinates()
-  			{
-  				  var geocoder = new google.maps.Geocoder();
-  				  var latlng = new google.maps.LatLng(0, 0);
-  				  var mapOptions = {
-  				    zoom: 1,
-  				    center: latlng
-  				  }
-  				   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-  				  
-  				var location = document.getElementById('location').textContent;
-  				var country = document.getElementById('country').textContent;
-  				var address = location+" "+country ;
-  				  geocoder.geocode( { 'address': address}, function(results, status) {
-  				    if (status == google.maps.GeocoderStatus.OK) {
-  				      map.setCenter(results[0].geometry.location);
-  				      map.setZoom(14);
-  				      var marker = new google.maps.Marker({
-  				          map: map,
-  				          position: results[0].geometry.location
-  				      });
-  				    }
-  				  });
-  			}  		
-	</script> 
-    
+    <script src="googleMapAPI.js"></script>
 </head>
 <body onload="initialize()">
 	<h1>Search for new item</h1>
@@ -78,6 +18,9 @@
   		ItemID: <input type="text" name="itemId" id="itemId"/> <br />
   		<input type="submit"/>
   	</form>
+    <% if ( (Boolean)request.getAttribute("no_item") == true) { %>
+    <h3> no item found for that id </h3>
+    <% } else { %> 
   	<% Item item = (Item)request.getAttribute("item"); %>
   	<p><strong>ID: </strong><%= item.getItem_ID() %></p>
   	<p><strong>Item: </strong><%= item.getName() %></p>
@@ -147,5 +90,6 @@
 	<%}%>
   </div>
   <div class="rightContent" id = "map-canvas" > </div>
+  <% } %>
 </body>
 </html>

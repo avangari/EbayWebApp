@@ -41,10 +41,19 @@ public class ItemServlet extends HttpServlet implements Servlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         //response.setContentType("text/html");
-        String ID = request.getParameter("itemId");
+        String ID = request.getParameter("itemId").replaceAll("\\s+","");
         String xmlString = AuctionSearchClient.getXMLDataForItemId(ID);
-        Item item = MyParser.loadXMLFromString(xmlString);
-        request.setAttribute("item",item);
+        if(xmlString.equals(""))
+        {
+            request.setAttribute("no_item",true);
+
+        }
+        else
+        {
+            request.setAttribute("no_item",false);
+            Item item = MyParser.loadXMLFromString(xmlString);
+            request.setAttribute("item",item);
+        }
         request.getRequestDispatcher("/item.jsp").forward(request, response);
     }  
 }
@@ -218,7 +227,7 @@ class MyParser
                 to_return.addToBids(temp);
             }
         }
-        to_return.sortBids();
+        //to_return.sortBids();
         return to_return;
    }
 }
