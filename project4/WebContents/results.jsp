@@ -13,9 +13,10 @@
     </form>
 	
     <h1> The results for the query are: </h1>
-    <%  SearchResult[] sr = (SearchResult[])request.getAttribute("sr");
+    <% int num = Integer.parseInt(request.getParameter("numResultsToSkip")); 
+    SearchResult[] sr = (SearchResult[])request.getAttribute("sr");
 	for (int i=0;i<sr.length;i++) { %>
-   	<p><%= i+1 %>---------><label>id:</label><a href = <%= "\"/eBay/item?itemId=" + sr[i].getItemId() + "\"" %>> <%= sr[i].getItemId() %></a>&nbsp; &nbsp;<label>Name:</label><%= sr[i].getName() %></p>
+   	<p><%= i+num+1 %>) <label>ID: </label><a href = <%= "\"/eBay/item?itemId=" + sr[i].getItemId() + "\"" %>> <%= sr[i].getItemId() %></a>&nbsp; &nbsp;<label>Name:  </label><%= sr[i].getName() %></p>
     <% } %> 
     <%if(Integer.parseInt(request.getParameter("numResultsToSkip")) != 0){%>
         <form action="/eBay/search">
@@ -28,7 +29,8 @@
             <input type="submit" value="Prev">
         </form>
     <%}%> 
-    <%if(request.getParameter("q") != ""){%>
+    
+    <%if(request.getParameter("q") != "" && (Boolean)request.getAttribute("toskip") == true){%>
         <form action="/eBay/search">
             <% int curr = Integer.parseInt(request.getParameter("numResultsToSkip"))+20;
                String qVal = request.getParameter("q");

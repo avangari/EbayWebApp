@@ -3,7 +3,6 @@ package edu.ucla.cs.cs144;
 import java.lang.Integer;
 import java.io.IOException;
 
-import javax.naming.directory.SearchResult;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,14 +18,24 @@ public class SearchServlet extends HttpServlet implements Servlet {
     	response.setContentType("text/html");
     	String query = request.getParameter("q");
     	int numResultsToSkip = Integer.parseInt(request.getParameter("numResultsToSkip"));
-    	int numResultsToReturn = Integer.parseInt(request.getParameter("numResultsToReturn"));
-    	
-    	request.setAttribute("sr",AuctionSearchClient.basicSearch(query,numResultsToSkip,numResultsToReturn));
-    	
-    
-    	
-    	request.getRequestDispatcher("/results.jsp").forward(request, response);
+    	int numResultsToReturn = Integer.parseInt(request.getParameter("numResultsToReturn"))+1;
+    	SearchResult[] results = AuctionSearchClient.basicSearch(query,numResultsToSkip,numResultsToReturn);
+        SearchResult[] modifiedResults = null;
         
+        if(results.length > numResultsToReturn-1)
+        {
+    	   request.setAttribute("toskip", true);
+           modifiedResults = new SearchResult[results.length-1];
+           System.arraycopy(results, 0, modifiedResults, 0, results.length-1);
+        }
+        else
+        {
+            request.setAttribute("toskip", false);
+            modifiedResults = new SearchResult[results.length];
+            System.arraycopy(results, 0, modifiedResults, 0, results.length);
+        }
+        request.setAttribute("sr",modifiedResults);
+    	request.getRequestDispatcher("/results.jsp").forward(request, response);
     }
 }
 
