@@ -111,9 +111,10 @@
     <%}%> 
   	<p><strong>Item Description: </strong><%= item.getDecription() %></p><br/>
   </div>
+  <% if(item.getBidLength() > 0) {%> 
 	<div class="rightContent">
     <p><strong>Bids:</strong></p>
-    <% if(item.getBidLength() > 0) {%>   
+      
 	    <table class="bidTable">
 		    <tr>
 		        <th>Bidder ID</th>
@@ -141,7 +142,7 @@
 					  <td><i>unavailable</i></td> 
 					<%}%>
 				</tr>
-			<%}%>
+	<%}%>
 		</table><br/><br/>
 	<%}%>
   </div>

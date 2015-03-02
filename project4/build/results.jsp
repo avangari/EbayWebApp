@@ -2,8 +2,10 @@
 <head>
     <title>Search Results</title>
     <%@ page import="edu.ucla.cs.cs144.SearchResult" %>
+    <script src="ebayFunctionality.js"></script>
+    <link rel="stylesheet" type="text/css" href="autosuggest.css" />  
 </head>
-<body>
+<body onload="start()">
 	<h1> search again with different keywords </h1>
 	<form action="/eBay/search" method="GET">
     		Keyword Search: <input type="text" name="q" id="q"/> <br />
