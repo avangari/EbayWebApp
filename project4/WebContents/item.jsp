@@ -15,13 +15,11 @@
 		var map;
   		function initialize() 
   		{ 
-  			
   			try
   			{
   			 	var lat_value = Number( document.getElementById('latitude').textContent );
   			 	var lon_value = Number( document.getElementById('longitude').textContent );
   			 	if( (lat_value > 90) || (lat_value < -90) || (lon_value > 180) || (lon_value <180) ){
-  			 		
   			 		no_coordinates();
   			 		return;
   			 	}
@@ -39,35 +37,12 @@
     		    	position: map.getCenter(),
     		    	map: map,
     		    	title: 'Click to zoom'
-    		  	});
-    		
-    			google.maps.event.addListener(map, 'mouseover', function() {
-       		   
-    				document.getElementById("map-canvas").style.width = '100%';
-    			
-    				google.maps.event.trigger(map, "resize");
-    			
-    		 	 });
-    		
-
-    			google.maps.event.addListener(map, 'mouseout', function() {
-      		   
-    				document.getElementById("map-canvas").style.width = '25%';
-    			
-    				google.maps.event.trigger(map, "resize");
-    			
-    		  	});
-  			 
+    		  	}); 
   			}
   			catch(err){
   				no_coordinates();
   			}
   		}
-  			
-  			
-  			
-    		
-  			
   			//if no latitude or longitude specified
   			function no_coordinates()
   			{
@@ -90,77 +65,54 @@
   				          map: map,
   				          position: results[0].geometry.location
   				      });
-  				    } else {
-  				      alert('Geocode was not successful for the following reason: ' + status);
   				    }
   				  });
-  				  
-  				  
-  				google.maps.event.addListener(map, 'mouseover', function() {
-  	       		   
-    				document.getElementById("map-canvas").style.width = '100%';
-    			
-    				google.maps.event.trigger(map, "resize");
-    			
-    		 	 });
-    		
-
-    			google.maps.event.addListener(map, 'mouseout', function() {
-      		   
-    				document.getElementById("map-canvas").style.width = '25%';
-    			
-    				google.maps.event.trigger(map, "resize");
-    			
-    		  	});
-  				
-  			}
-  			
-  			
-    		
-    		
-    		
-    		
-  		
-  		
-  		
+  			}  		
 	</script> 
-    
-    
     
 </head>
 <body onload="initialize()">
 	<h1>Search for new item</h1>
-	<form action="/eBay/item" method="GET">
-		ItemID: <input type="text" name="itemId" id="itemId"/> <br />
-		<input type="submit"/>
-	</form>
-	<% Item item = (Item)request.getAttribute("item"); %>
-	<p><strong>ID: </strong><%= item.getItem_ID() %></p>
-	<p><strong>Item: </strong><%= item.getName() %></p>
-	<p><strong>Current Bid: </strong>$<%= item.getCurrent_bid() %></p>
-	<p><strong>First Bid: </strong>$<%= item.getFirst_bid() %></p>
-	<p><strong>Number of Bids: </strong><%= item.getNo_of_bids() %></p>
-	
-	<strong>Location: </strong> <p id="location"><%= item.getLocation()%></p>
-	
-	
-	<strong>Country: </strong> <p id = "country"><%= item.getCountry() %></p>	
-	
-	<%if(item.getLatitude() != ""){%>
-	  	<strong>Latitude: </strong><p id="latitude"><%= item.getLatitude()%></p>
-	<%}%>	
-	
-	<%if(item.getLongitude() != ""){%>
-	  	<strong>Longitude: </strong><p id="longitude"><%= item.getLongitude()%></p>
-	<%}%>	
-	<div id = "map-canvas" > </div>
+  <div class="leftContent">
+  	<form action="/eBay/item" method="GET">
+  		ItemID: <input type="text" name="itemId" id="itemId"/> <br />
+  		<input type="submit"/>
+  	</form>
+  	<% Item item = (Item)request.getAttribute("item"); %>
+  	<p><strong>ID: </strong><%= item.getItem_ID() %></p>
+  	<p><strong>Item: </strong><%= item.getName() %></p>
+  	<p><strong>Current Bid: </strong>$<%= item.getCurrent_bid() %></p>
+  	<p><strong>First Bid: </strong>$<%= item.getFirst_bid() %></p>
+  	<p><strong>Number of Bids: </strong><%= item.getNo_of_bids() %></p>
+  	
+  	<strong>Location: </strong><p id="location"><%= item.getLocation()%></p><br/><br/>
+  	
+  	
+  	<strong>Country: </strong><p id = "country"><%= item.getCountry() %></p><br/><br/>	
+  	
+  	<%if(item.getLatitude() != ""){%>
+  	    <strong>Latitude: </strong><p id="latitude"><%= item.getLatitude()%></p><br/><br/>
+  	<%}%>	
+  	
+  	<%if(item.getLongitude() != ""){%>
+  	  	<strong>Longitude: </strong><p id="longitude"><%= item.getLongitude()%></p><br/>
+  	<%}%>	
 
-	<p><strong>Start Date: </strong><%= item.getStarted() %></p>
-	<p><strong>End Date: </strong><%= item.getEnds() %></p>
-	<p><strong>Seller ID: </strong><%= item.getSeller_id() %></p>
-	<p><strong>Seller Rating: </strong><%= item.getSeller_rating() %></p>
-	<p><strong>Item Description: </strong><%= item.getDecription() %></p><br/>
-	<p><strong>Bids:</strong></p>
+  	<p><strong>Start Date: </strong><%= item.getStarted() %></p>
+  	<p><strong>End Date: </strong><%= item.getEnds() %></p>
+  	<p><strong>Seller ID: </strong><%= item.getSeller_id() %></p>
+  	<p><strong>Seller Rating: </strong><%= item.getSeller_rating() %></p>
+    <% if(item.getCategoryLength() > 0) {%> 
+      <p><strong>Categories: </strong>
+        <%for(String s: item.getCategories()){%>
+          <%=s+ " | "%>
+        <%}%>
+      </p>
+    <%}%> 
+  	<p><strong>Item Description: </strong><%= item.getDecription() %></p><br/>
+  </div>
+	<div class="rightContent">
+    <p><strong>Bids:</strong></p>
     <% if(item.getBidLength() > 0) {%>   
 	    <table class="bidTable">
 		    <tr>
@@ -170,7 +122,6 @@
 		        <th>Date and time</th>
 		       	<th>Bidder Location</th>
 		        <th>Bidder Country</th>
-		        
 		    </tr>
 			<% for(Bid b : item.getBids()) {%>
 				<tr>
@@ -191,7 +142,9 @@
 					<%}%>
 				</tr>
 			<%}%>
-		</table>
+		</table><br/><br/>
 	<%}%>
+  </div>
+  <div class="rightContent" id = "map-canvas" > </div>
 </body>
 </html>

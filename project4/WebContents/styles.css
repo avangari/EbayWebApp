@@ -1,4 +1,4 @@
-table.bidtable {
+.bidtable {
 	font-family: verdana,arial,sans-serif;
 	font-size:11px;
 	color:#333333;
@@ -6,16 +6,16 @@ table.bidtable {
 	border-color: #666666;
 	border-collapse: collapse;
 }
-table.bidtable th {
+th {
 	border-width: 1px;
-	padding: 8px;
+	padding: 1px;
 	border-style: solid;
 	border-color: #666666;
 	background-color: #dedede;
 }
-table.bidtable td {
+td {
 	border-width: 1px;
-	padding: 8px;
+	padding: 1px;
 	border-style: solid;
 	border-color: #666666;
 	background-color: #ffffff;
@@ -23,5 +23,22 @@ table.bidtable td {
 
 html { height: 100%; width : 100%;}
 body { height: 100%; width : 100% ;margin: 0; padding: 0;}
-#map-canvas { height: 50%; width:25%; }
+#map-canvas { height: 50%; padding-right: 1%;}
+
+.rightContent{
+	float:right;
+	width: 48%;
+	padding-right: 1%;
+}
+.leftContent{
+	float:left;
+	width: 48%;
+	padding-left: 1%;
+}
+
+#location{display: inline;}
+#country{display: inline;}
+#latitude{display: inline;}
+#longitude{display: inline;}
+
 

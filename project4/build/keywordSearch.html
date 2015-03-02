@@ -15,19 +15,19 @@
 		
 		function showSuggestion()
 		{
-			 if(xmlHttp.readyState == 4)
+			 if ( (xmlHttp.readyState == 4) && (xmlHttp.status === 200) )
 				 {
 				// get the CompleteSuggestion elements from the response
 				    var s = xmlHttp.responseXML.getElementsByTagName('CompleteSuggestion');
-				 	alert("hello");
+				 	
 				    // construct a bullet list from the suggestions
-				    var htmlCode = "<ul>";
+				    var htmlCode = "<datalist id=\"datalist1\">";
 				    for (i = 0; i < s.length; i++) {
 				       var text = s[i].childNodes[0].getAttribute("data");
 
-				       htmlCode += "<li><b>" + text + "</b></li>";
+				       htmlCode += "<option value=\"" + text + "\">";
 				    }
-				    htmlCode += "</ul>";
+				    htmlCode += "</datalist>";
 
 				    // display the list on the page
 				    document.getElementById("suggestion").innerHTML = htmlCode;
@@ -39,13 +39,12 @@
     <body>
     	<h1>Keyword Search</h1>
     	<form action="/eBay/search" method="GET">
-    		Keyword Search: <input type="text" name="q" id="q" onkeyup = "sendAjaxRequest(this.value); "/> <br />
+    		Keyword Search: <input type="text" name="q" id="q" onkeyup = "sendAjaxRequest(this.value);" list="datalist1"/> 
+    		<pre id="suggestion"></pre>
+    		<br />
     		<input type="hidden" name="numResultsToSkip" value="0"/>
-			<input type="hidden" name="numResultsToReturn" value="10"/><br/>
+			<input type="hidden" name="numResultsToReturn" value="20"/><br/>
     		<input type="submit"/>
-    		
-    		
     	</form>
-    	<strong>Suggestion :  </strong> <pre id= "suggestion"> </pre>
     </body>
 </html>

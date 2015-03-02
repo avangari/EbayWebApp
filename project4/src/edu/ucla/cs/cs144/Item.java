@@ -39,6 +39,12 @@ public class Item
     {
     	return bids.size();
     }
+
+    public int getCategoryLength()
+    {
+        return categories.size();
+    }
+
     public int getItem_ID() {
         return Item_ID;
     }
@@ -192,7 +198,6 @@ public class Item
     		      return o1.getBid_date().compareTo(o2.getBid_date());
     		  }
     		});
-    	
     }
 
     public String printAll()
