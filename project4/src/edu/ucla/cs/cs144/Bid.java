@@ -13,6 +13,11 @@ public class Bid implements Comparable<Bid>
 	String location;
 	String country;
 
+    public Bid()
+    {
+        location = "";
+        country = "";
+    }
     public String getBidder_id() {
         return bidder_id;
     }
@@ -51,7 +56,10 @@ public class Bid implements Comparable<Bid>
     }
 
     public String getLocation() {
-        return location;
+        if(location == "" || location == null || location.length() == 0)
+            return "unavailable";
+        else
+            return location;
     }
 
     public void setLocation(String location) {
@@ -59,7 +67,10 @@ public class Bid implements Comparable<Bid>
     }
 
     public String getCountry() {
-        return country;
+        if(country == "" || country == null || country.length() == 0)
+            return "unavailable";
+        else
+            return country;
     }
 
     public void setCountry(String country) {

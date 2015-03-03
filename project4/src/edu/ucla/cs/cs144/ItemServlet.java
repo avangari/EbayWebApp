@@ -196,14 +196,16 @@ class MyParser
                 String currBidderRating = ((Element)e.getElementsByTagName("Bidder").item(0)).getAttribute("Rating"); 
                 
                 Element rootBidder = (Element)e.getElementsByTagName("Bidder").item(0);
+                
                 Element[] bidLocation = (Element[])getElementsByTagNameNR(rootBidder, "Location");
                 Element[] bidCountry = (Element[])getElementsByTagNameNR(rootBidder, "Country");
-                String bidderLocation = "";
-                String bidderCountry = "";
-
-                bidderLocation = bidLocation[0].getTextContent();
+                String bidderLocation="";
+                String bidderCountry="";
+                if(bidLocation.length > 0)
+                    bidderLocation = bidLocation[0].getTextContent();
                 
-                bidderCountry =  bidCountry[0].getTextContent();
+                if(bidCountry.length > 0)
+                    bidderCountry =  bidCountry[0].getTextContent();
                 
                 String bidAmount = ((Element)e.getElementsByTagName("Amount").item(0)).getTextContent().substring(1);
                 Date currBidTime = null;

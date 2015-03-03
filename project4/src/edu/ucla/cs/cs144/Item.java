@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import edu.ucla.cs.cs144.Bid;
 
 public class Item
@@ -27,6 +28,7 @@ public class Item
     private String seller_id;
     private int seller_rating;
     private String decription;
+    
     
     public Item()
     {
@@ -82,6 +84,7 @@ public class Item
     }
 
     public double getCurrent_bid() {
+
         return current_bid;
     }
 

@@ -81,17 +81,13 @@
     					<td><%= b.getBidder_rating()%></td>
     					<td>$<%= b.getAmount()%></td>
     					<td><%= b.getBid_date()%></td>
-    					<%if(b.getLocation() != ""){%>
+
     					  	<td><%= b.getLocation()%></td>
-    					<%}else{%>
-    					  <td><i>unavailable</i></td> 
-    					<%}%>	
     					
-    					<%if(item.getCountry() != ""){%>
+    					
+    					
     					  	<td><%= b.getCountry()%></td>
-    					<%}else{%>
-    					  <td><i>unavailable</i></td> 
-    					<%}%>
+    					
     				</tr>
     	<%}%>
     		</table><br/><br/>
