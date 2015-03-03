@@ -1,16 +1,18 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Search Results</title>
     <%@ page import="edu.ucla.cs.cs144.SearchResult" %>
     <script src="ebayFunctionality.js"></script>
     <link rel="stylesheet" type="text/css" href="autosuggest.css" />  
+    <link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
 <body onload="start()">
     <h1> search  </h1>
     <form action="/eBay/search" method="GET">
             Keyword Search: <input type="text" name="q" id="q" autocomplete="off"/> <br />
             <input type="hidden" name="numResultsToSkip" value="0"/>
-            <input type="hidden" name="numResultsToReturn" value="10"/><br/>
+            <input type="hidden" name="numResultsToReturn" value="20"/><br/>
             <input type="submit"/>
     </form>
     <% if ( ( (Boolean)request.getAttribute("url_changed") == true) ||  ( (Boolean)request.getAttribute("number_exception") == true) ) { %>
@@ -23,12 +25,14 @@
             <% } else {%>
 
             
-            <h1> The results for the query are: </h1>
-            <% int num = Integer.parseInt(request.getParameter("numResultsToSkip")); 
-            SearchResult[] sr = (SearchResult[])request.getAttribute("sr");
-            for (int i=0;i<sr.length;i++) { %>
-            <p><label>ID: </label><a href = <%= "\"/eBay/item?itemId=" + sr[i].getItemId() + "\"" %>> <%= sr[i].getItemId() %></a>&nbsp; &nbsp;<label>Name:  </label><%= sr[i].getName() %></p>
-            <% } %> 
+             <div id="listDiv">
+    			<h2> The results for the query are: </h2>
+        		<% int num = Integer.parseInt(request.getParameter("numResultsToSkip")); 
+        			SearchResult[] sr = (SearchResult[])request.getAttribute("sr");
+        		for (int i=0;i<sr.length;i++) { %>
+            	<li><a href=<%= "\"/eBay/item?itemId=" + sr[i].getItemId() + "\"" %>><%= sr[i].getItemId()+" "+sr[i].getName() %></a></li>
+        		<% } %>
+    		</div> 
             <%if(Integer.parseInt(request.getParameter("numResultsToSkip")) != 0){%>
                 <form action="/eBay/search">
                     <% int curr = Integer.parseInt(request.getParameter("numResultsToSkip"))-20;

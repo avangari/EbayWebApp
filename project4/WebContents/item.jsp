@@ -26,8 +26,14 @@
       	<% Item item = (Item)request.getAttribute("item"); %>
       	<p><strong>ID: </strong><%= item.getItem_ID() %></p>
       	<p><strong>Item: </strong><%= item.getName() %></p>
+      	<% if(item.getBuy_price() != -1){%>
+      	    <strong>Buy_price:</strong>$<p id="buy_price"><%= item.getBuy_price()%></p>
+      	<%} else {%>
+      	<strong>Buy_price:</strong><p id="buy_price"><i>buy price not available</i></p>
+      	<% } %>
       	<p><strong>Current Bid: </strong>$<%= item.getCurrent_bid() %></p>
       	<p><strong>First Bid: </strong>$<%= item.getFirst_bid() %></p>
+
       	<p><strong>Number of Bids: </strong><%= item.getNo_of_bids() %></p>
       	
       	<strong>Location: </strong><p id="location"><%= item.getLocation()%></p><br/><br/>

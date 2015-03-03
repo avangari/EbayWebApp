@@ -1,10 +1,9 @@
-var xmlHttp = new XMLHttpRequest();
-		var states;
+		var states = [];
 		function sendAjaxRequest(input)
 		{
 			var request = "suggest?q="+encodeURI(input);
 			xmlHttp.open("GET",request);
-			xmlHttp.onreadystatechange = showSuggestion;
+			xmlHttp.onreadystatechange = requestSuggestions();
 			xmlHttp.send(null);
 		}
 		
@@ -199,7 +198,7 @@ var xmlHttp = new XMLHttpRequest();
 		        //ignore
 		    } else {
 		        //request suggestions from the suggestion provider with typeahead
-		        this.provider.requestSuggestions(this,false);
+		        this.provider.requestSuggestions(this, true);
 		    }
 		};
 
@@ -241,8 +240,9 @@ var xmlHttp = new XMLHttpRequest();
 		    //assign the onkeyup event handler
 		    this.textbox.onkeyup = function (oEvent) {
 		    	//alert("keyup");
-		    	sendAjaxRequest(this.value);
+		    	//sendAjaxRequest(this.value);
 		        //check for the proper location of the event object
+		        
 		        if (!oEvent) {
 		            oEvent = window.event;
 		        }    
@@ -398,16 +398,51 @@ var xmlHttp = new XMLHttpRequest();
 		    var sTextboxValue = oAutoSuggestControl.textbox.value;
 		    
 		    if (sTextboxValue.length > 0){
-		    
+		    	var xmlHttp = new XMLHttpRequest();
+			    var request = "suggest?q="+encodeURI(sTextboxValue);
+				xmlHttp.open("GET",request);
+				//xmlHttp.onreadystatechange = requestSuggestions();
+				xmlHttp.send(null);
+
+				xmlHttp.onreadystatechange=function()
+				{
+					if ( (xmlHttp.readyState == 4) && (xmlHttp.status === 200) )
+					 {
+					// get the CompleteSuggestion elements from the response
+					    states = [];
+					    var s = xmlHttp.responseXML.getElementsByTagName('CompleteSuggestion');
+					 	
+					    // construct a bullet list from the suggestions
+					    //var htmlCode = "<ul>";
+					    for (i = 0; i < s.length; i++) {
+					       var text = s[i].childNodes[0].getAttribute("data");
+					       states.push(text);
+					       //htmlCode += "<li><b>" + text + "</b></li>";
+					    }
+					    //htmlCode += "</ul>";
+					    console.log(states.length);
+					    console.log(states);
+					    // display the list on the page
+					    //document.getElementById("suggestion").innerHTML = htmlCode;
+					 	oAutoSuggestControl.autosuggest(states, bTypeAhead);
+					 }
+				}
 		        //search for matching states
-		        for (var i=0; i < states.length; i++) { 
-		            if (states[i].indexOf(sTextboxValue) == 0) {
-		                aSuggestions.push(states[i]);
-		            } 
-		        }
+		        // alert(states.length);
+		        // for (var i=0; i < states.length; i++) { 
+		        //     if (states[i].indexOf(sTextboxValue) == 0) {
+		        //         aSuggestions.push(states[i]);
+		        //     } 
+		        // }
+		        //console.log(aSuggestions.length);
+		    	
 		    }
+		    else{
+					states = [];
+					oAutoSuggestControl.autosuggest(states, bTypeAhead);
+				}
 		    //provide suggestions to the control
-		    oAutoSuggestControl.autosuggest(aSuggestions, bTypeAhead);
+		    
 		};
 		function start() {
 			//alert("onload");
