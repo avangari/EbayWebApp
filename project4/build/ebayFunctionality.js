@@ -199,7 +199,7 @@ var xmlHttp = new XMLHttpRequest();
 		        //ignore
 		    } else {
 		        //request suggestions from the suggestion provider with typeahead
-		        this.provider.requestSuggestions(this, true);
+		        this.provider.requestSuggestions(this,false);
 		    }
 		};
 

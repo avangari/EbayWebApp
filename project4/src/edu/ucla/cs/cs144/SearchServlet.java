@@ -21,6 +21,16 @@ public class SearchServlet extends HttpServlet implements Servlet {
         int numResultsToReturn = Integer.parseInt(request.getParameter("numResultsToReturn"))+1;
         SearchResult[] results = AuctionSearchClient.basicSearch(query,numResultsToSkip,numResultsToReturn);
         SearchResult[] modifiedResults = null;
+        if ( (numResultsToReturn <= 0) || ( numResultsToSkip < 0 ) )
+        	request.setAttribute("url_changed",true);
+
+
+       	else
+       	{
+
+       		request.setAttribute("url_changed",false);
+       	}
+       	
         if(results.length == 0)
         {
             request.setAttribute("no_result",true);
