@@ -11,15 +11,14 @@
 	</script> 
     <script src="googleMapAPI.js"></script>
     <script src="validate.js" type="text/javascript" ></script>
+    <link rel="stylesheet" type="text/css" href="searchStyle.css" /> 
 </head>
-<body onload="initialize()">
-	<h1>Search for new item</h1>
+<body onload="initialize()" id="itemBody">
+  <form id="searchbox" action="/eBay/item" method="GET" onsubmit="return validateForm()" name="myForm">
+    <input type="text" name="itemId" id="itemId" placeholder="Search Item ID..."/>
+    <input id="submit" type="submit"/>
+  </form>
   <div class="leftContent">
-  	<form action="/eBay/item" method="GET" onsubmit="return validateForm()" name="myForm">
-  		ItemID: <input type="text" name="itemId" id="itemId"/> <br />
-  		<input type="submit"/>
-  	</form>
-    
         <% if ( (Boolean)request.getAttribute("no_item") == true) { %>
         <h3> no item found for that id </h3>
         <% } else { %> 

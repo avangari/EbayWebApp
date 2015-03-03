@@ -69,6 +69,7 @@ li:last-child {
 }
  
 li a {
+	text-align: center;
   text-decoration: none;
   color: #000;
   display: block;

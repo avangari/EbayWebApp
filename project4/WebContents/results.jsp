@@ -13,60 +13,60 @@
                     alert("fill in the query box");
                     return false;
                  }
-            
         }
     </script>
     <link rel="stylesheet" type="text/css" href="autosuggest.css" />  
     <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="searchStyle.css" /> 
 </head>
-<body onload="start()">
-    <h1> search  </h1>
-    <form action="/eBay/search" method="GET" name="myForm" onsubmit="return validate()">
-            Keyword Search: <input type="text" name="q" id="q" autocomplete="off"/> <br />
+<body onload="start()" id="resultBody">
+    <form id="searchbox" action="/eBay/search" method="GET" name="myForm" onsubmit="return validate()">
+            <input type="text" name="q" id="q" autocomplete="off" placeholder="Search Keyword..."/>
             <input type="hidden" name="numResultsToSkip" value="0"/>
-            <input type="hidden" name="numResultsToReturn" value="20"/><br/>
-            <input type="submit"/>
+            <input type="hidden" name="numResultsToReturn" value="20"/>
+            <input type="submit" id="submit"/>
     </form>
     <% if ( ( (Boolean)request.getAttribute("url_changed") == true) ||  ( (Boolean)request.getAttribute("number_exception") == true) ) { %>
     <h3> please do not mess with the URL!! </h3>
     <% } else { %>
-
-
             <% if ( (Boolean)request.getAttribute("no_result") == true) { %>
             <h3> search again with different keywords </h3>
             <% } else {%>
 
             
              <div id="listDiv">
-    			<h2> The results for the query are: </h2>
         		<% int num = Integer.parseInt(request.getParameter("numResultsToSkip")); 
         			SearchResult[] sr = (SearchResult[])request.getAttribute("sr");
         		for (int i=0;i<sr.length;i++) { %>
-            	<li><a href=<%= "\"/eBay/item?itemId=" + sr[i].getItemId() + "\"" %>><%= sr[i].getItemId()+" "+sr[i].getName() %></a></li>
+            	<li><a href=<%= "\"/eBay/item?itemId=" + sr[i].getItemId() + "\"" %>><%= sr[i].getItemId()+":  "+sr[i].getName() %></a></li>
         		<% } %>
     		</div> 
             <%if(Integer.parseInt(request.getParameter("numResultsToSkip")) != 0){%>
-                <form action="/eBay/search">
+                <div id="prev">
+                <form action="/eBay/search" id="prevForm">
                     <% int curr = Integer.parseInt(request.getParameter("numResultsToSkip"))-20;
                        String qVal = request.getParameter("q");
                     %>
                     <input type="hidden" name="numResultsToSkip" value="<%=curr%>"/>
                     <input type="hidden" name="numResultsToReturn" value="20"/>
                     <input type="hidden" name="q" value="<%=qVal%>"/>
-                    <input type="submit" value="Prev">
+                    <input class="styled-button-10" type="submit" value="Prev">
                 </form>
+                </div>
             <%}%> 
             
             <%if(request.getParameter("q") != "" && (Boolean)request.getAttribute("toskip") == true){%>
-                <form action="/eBay/search">
+                <div id="next">
+                <form action="/eBay/search" id="nextForm">
                     <% int curr = Integer.parseInt(request.getParameter("numResultsToSkip"))+20;
                        String qVal = request.getParameter("q");
                     %>
                     <input type="hidden" name="numResultsToSkip" value="<%=curr%>"/>
                     <input type="hidden" name="numResultsToReturn" value="20"/>
                     <input type="hidden" name="q" value="<%=qVal%>"/>
-                    <input type="submit" value="Next">
+                    <input class="styled-button-10" type="submit" value="Next">
                 </form>
+                </div>
             <%}%> 
             <% } %>
     <% } %>

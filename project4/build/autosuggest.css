@@ -3,6 +3,9 @@ div.suggestions {
     box-sizing: border-box;
     border: 1px solid black;
     position: absolute;   
+    z-index: 9999;
+    font: normal 13px 'trebuchet MS', arial, helvetica;
+    background: #F1F1F1;
 }
 
 div.suggestions div {
