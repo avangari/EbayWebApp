@@ -1,11 +1,20 @@
 <html>
 
-	<head><title>getItem</title></head>
+	<head>
+		<title>
+			getItem
+		</title>
+
+		<script src="validate.js" type="text/javascript" >
+			
+    	</script>
+
+	</head>
     <body>
     	<h1>getItem</h1>
-    	<form action="/eBay/item" method="GET">
+    	<form action="/eBay/item" method="GET" name="myForm" onsubmit="return validateForm()">
     		ItemID: <input type="text" name="itemId" id="itemId"/> <br />
-    		<input type="submit"/>
+    		<input type="submit"  />
     	</form>
     </body>
 </html>

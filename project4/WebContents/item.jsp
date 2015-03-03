@@ -10,11 +10,12 @@
  	   src="http://maps.google.com/maps/api/js?sensor=false&key=AIzaSyCizZ44XO3l_pPhWxQ3tw7kpR0GqIW6GCI"> 
 	</script> 
     <script src="googleMapAPI.js"></script>
+    <script src="validate.js" type="text/javascript" ></script>
 </head>
 <body onload="initialize()">
 	<h1>Search for new item</h1>
   <div class="leftContent">
-  	<form action="/eBay/item" method="GET">
+  	<form action="/eBay/item" method="GET" onsubmit="return validateForm()" name="myForm">
   		ItemID: <input type="text" name="itemId" id="itemId"/> <br />
   		<input type="submit"/>
   	</form>
