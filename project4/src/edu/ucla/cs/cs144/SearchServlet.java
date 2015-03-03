@@ -17,8 +17,23 @@ public class SearchServlet extends HttpServlet implements Servlet {
     {
         response.setContentType("text/html");
         String query = request.getParameter("q").trim();
-        int numResultsToSkip = Integer.parseInt(request.getParameter("numResultsToSkip"));
-        int numResultsToReturn = Integer.parseInt(request.getParameter("numResultsToReturn"))+1;
+        int numResultsToSkip=0;
+        int numResultsToReturn=1;
+        boolean flag=false;
+        try{
+        	 numResultsToSkip = Integer.parseInt(request.getParameter("numResultsToSkip"));
+         	 numResultsToReturn = Integer.parseInt(request.getParameter("numResultsToReturn"))+1;
+        }
+        catch(NumberFormatException n)
+        {
+        	flag = true;
+        }
+
+        if(flag)
+        	request.setAttribute("number_exception",true);
+        else
+			request.setAttribute("number_exception",false);
+
         SearchResult[] results = AuctionSearchClient.basicSearch(query,numResultsToSkip,numResultsToReturn);
         SearchResult[] modifiedResults = null;
         if ( (numResultsToReturn <= 0) || ( numResultsToSkip < 0 ) )
@@ -30,7 +45,7 @@ public class SearchServlet extends HttpServlet implements Servlet {
 
        		request.setAttribute("url_changed",false);
        	}
-       	
+
         if(results.length == 0)
         {
             request.setAttribute("no_result",true);

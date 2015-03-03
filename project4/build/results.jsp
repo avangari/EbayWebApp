@@ -13,7 +13,7 @@
             <input type="hidden" name="numResultsToReturn" value="10"/><br/>
             <input type="submit"/>
     </form>
-    <% if ( (Boolean)request.getAttribute("url_changed") == true) { %>
+    <% if ( ( (Boolean)request.getAttribute("url_changed") == true) ||  ( (Boolean)request.getAttribute("number_exception") == true) ) { %>
     <h3> please do not mess with the URL!! </h3>
     <% } else { %>
 
