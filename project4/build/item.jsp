@@ -16,7 +16,7 @@
 <body onload="initialize()" id="itemBody">
   <form id="searchbox" action="/eBay/item" method="GET" onsubmit="return validateForm()" name="myForm">
     <input type="text" name="itemId" id="itemId" placeholder="Search Item ID..."/>
-    <input id="submit" type="submit"/>
+    <input id="submit" type="submit" value='Search'/>
   </form>
   <div class="leftContent">
         <% if ( (Boolean)request.getAttribute("no_item") == true) { %>

@@ -16,18 +16,39 @@ public class SearchServlet extends HttpServlet implements Servlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setContentType("text/html");
-        String query = request.getParameter("q").trim();
-        int numResultsToSkip=0;
-        int numResultsToReturn=1;
-        boolean flag=false;
+        String query="";
+        boolean queryFlag=false;
         try{
-        	 numResultsToSkip = Integer.parseInt(request.getParameter("numResultsToSkip"));
-         	 numResultsToReturn = Integer.parseInt(request.getParameter("numResultsToReturn"))+1;
+            query = request.getParameter("q").trim();
+        }
+        catch(NullPointerException e){
+            queryFlag = true;
+        }
+        if(queryFlag)
+            request.setAttribute("missing_query",true);
+        else
+            request.setAttribute("missing_query",false);
+
+        int default_numResultsToSkip=0;
+        int default_numResultsToReturn=19532;
+        int numResultsToReturn=0;
+        int numResultsToSkip=0;
+        boolean flag=false;
+        String numSkip = request.getParameter("numResultsToSkip");
+        String numReturn = request.getParameter("numResultsToReturn");
+        try{
+        	 numResultsToSkip = Integer.parseInt(numSkip);
+         	 numResultsToReturn = Integer.parseInt(numReturn)+1;
         }
         catch(NumberFormatException n)
         {
         	flag = true;
         }
+        if(numResultsToSkip == 0)
+            numResultsToSkip = default_numResultsToSkip;
+
+        if(numResultsToReturn == 1)
+            numResultsToReturn = default_numResultsToReturn;
 
         if(flag)
         	request.setAttribute("number_exception",true);
