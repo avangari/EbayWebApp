@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,14 +36,16 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.InputSource;
 
+
 public class ItemServlet extends HttpServlet implements Servlet 
 {
     public ItemServlet() {}
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        //response.setContentType("text/html");
+        response.setContentType("text/html");
         String ID = request.getParameter("itemId").replaceAll("\\s+","");
         String xmlString = AuctionSearchClient.getXMLDataForItemId(ID);
+        HttpSession session = request.getSession(true);
         if(xmlString.equals(""))
         {
             request.setAttribute("no_item",true);
@@ -53,6 +56,13 @@ public class ItemServlet extends HttpServlet implements Servlet
             request.setAttribute("no_item",false);
             Item item = MyParser.loadXMLFromString(xmlString);
             request.setAttribute("item",item);
+            
+            if(session.isNew())
+            {
+                session.setAttribute("item",item);
+
+            }
+
         }
         request.getRequestDispatcher("/item.jsp").forward(request, response);
     }  

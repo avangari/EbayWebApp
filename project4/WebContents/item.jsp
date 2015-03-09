@@ -26,7 +26,9 @@
       	<p><strong>ID: </strong><%= item.getItem_ID() %></p>
       	<p><strong>Item: </strong><%= item.getName() %></p>
       	<% if(item.getBuy_price() != -1){%>
+
       	    <strong>Buy_price:</strong>$<p id="buy_price"><%= item.getBuy_price()%></p>
+            <a href="/eBay/buy"> <button id="pay_now" value="pay_now">pay now </button></a>
       	<%} else {%>
       	<strong>Buy_price:</strong><p id="buy_price"><i>buy price not available</i></p>
       	<% } %>
