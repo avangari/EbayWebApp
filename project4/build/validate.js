@@ -10,7 +10,7 @@ function validateForm()
         		 var num = parseInt(x);
         		 if(isNaN(x))
         		 {
-        		 	alert("please enter a valid item ID. The entered number is not a number");
+        		 	alert("please enter a valid item ID. The entered string is not a number");
         		 	return false;
         		 }
 

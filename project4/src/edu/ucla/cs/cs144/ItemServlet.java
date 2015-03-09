@@ -57,11 +57,10 @@ public class ItemServlet extends HttpServlet implements Servlet
             Item item = MyParser.loadXMLFromString(xmlString);
             request.setAttribute("item",item);
             
-            if(session.isNew())
-            {
+           
                 session.setAttribute("item",item);
 
-            }
+            
 
         }
         request.getRequestDispatcher("/item.jsp").forward(request, response);
