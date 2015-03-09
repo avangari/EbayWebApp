@@ -18,6 +18,8 @@
 <p><strong>ID: </strong><%= item.getItem_ID() %></p>
 <p><strong>Item: </strong><%= item.getName() %></p>
 <strong>Buy_price:</strong>$<p id="buy_price"><%= item.getBuy_price()%></p>
+<p><strong>Seller ID: </strong><%= item.getSeller_id() %></p>
+<p><strong>Seller Rating: </strong><%= item.getSeller_rating() %></p>
 
 <p><Strong>Credit card number: </Strong><%= request.getAttribute("credit_card") %> </p>
 <p><Strong> Time purchased : </Strong><%= request.getAttribute("buy_time") %></p>

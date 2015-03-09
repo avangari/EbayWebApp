@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.math.BigInteger;
 
 
 public class ConfirmServlet extends HttpServlet implements Servlet {
@@ -29,11 +30,11 @@ public class ConfirmServlet extends HttpServlet implements Servlet {
 
 
 
-    String str_credit_card = request.getParameter("credit");
-    
+    String str_credit_card = request.getParameter("credit").replaceAll("\\s+","");
+
     try
     {
-      Integer credit_card = Integer.parseInt(str_credit_card);
+      BigInteger credit_card = new BigInteger(str_credit_card);
       request.setAttribute("credit_card",credit_card);
       request.setAttribute("error",false);
     }
