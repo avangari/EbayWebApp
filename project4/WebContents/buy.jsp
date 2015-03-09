@@ -3,6 +3,7 @@
 <head>
 	<title> Item data </title>
  	 <%@ page import="edu.ucla.cs.cs144.Item" %>
+ 	 <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
