@@ -29,18 +29,23 @@ public class ConfirmServlet extends HttpServlet implements Servlet {
     request.setAttribute("buy_time", sdf.format(cal.getTime()).toString()); 
 
 
-
-    String str_credit_card = request.getParameter("credit").replaceAll("\\s+","");
+    request.setAttribute("error",false);
+    request.setAttribute("null_error",false);    
 
     try
     {
+      String str_credit_card = request.getParameter("credit").replaceAll("\\s+","");
       BigInteger credit_card = new BigInteger(str_credit_card);
       request.setAttribute("credit_card",credit_card);
-      request.setAttribute("error",false);
+      
     }
     catch(NumberFormatException e)
     {
       request.setAttribute("error",true);
+    }
+    catch(NullPointerException e)
+    {
+      request.setAttribute("null_error",true);
     }
 
     request.getRequestDispatcher("/confirm.jsp").forward(request, response);

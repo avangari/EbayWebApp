@@ -18,7 +18,7 @@ public class BuyServlet extends HttpServlet implements Servlet {
     
     response.setContentType("text/html");
     
-
+    
     request.getRequestDispatcher("/buy.jsp").forward(request, response);
 
   }

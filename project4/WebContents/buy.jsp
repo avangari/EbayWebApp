@@ -18,7 +18,8 @@
 <p><strong>Seller ID: </strong><%= item.getSeller_id() %></p>
 <p><strong>Seller Rating: </strong><%= item.getSeller_rating() %></p>
 
-<form action="/eBay/confirm" method="GET" name="buyForm" onsubmit = "return validate_card()">
+
+<form action="https://localhost:8443/eBay/confirm" method="GET" name="buyForm" onsubmit = "return validate_card()">
 	<input type="text" id="credit" name="credit" placeholder="enter credit card info">
 	<input type="submit" value="pay now" > </input>
 </form>

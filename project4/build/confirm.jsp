@@ -11,6 +11,9 @@
 <% if ( (Boolean)request.getAttribute("error") == true ) { %>
 <h1> there was some error</h1>
 <h3><a href="/eBay"> click here </a> to go to home page </h3>
+<% } else if ( (Boolean) request.getAttribute("null_error") == true) { %>
+<h1> please do not mess with the URL ! </h1>
+<h3><a href="/eBay"> click here </a> to go to home page </h3>
 <% } else { %>
 <% HttpSession this_session = request.getSession(true); %>
 <% Item item = (Item)this_session.getAttribute("item"); %>
@@ -23,6 +26,11 @@
 
 <p><Strong>Credit card number: </Strong><%= request.getAttribute("credit_card") %> </p>
 <p><Strong> Time purchased : </Strong><%= request.getAttribute("buy_time") %></p>
+
+
+<h3><a href="/eBay"> click here </a> to go to home page </h3>
+
+
 <% } %>
 </body>
 </html>
