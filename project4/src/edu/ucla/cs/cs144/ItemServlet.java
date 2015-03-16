@@ -58,7 +58,7 @@ public class ItemServlet extends HttpServlet implements Servlet
             request.setAttribute("item",item);
             
            
-                session.setAttribute("item",item);
+            session.setAttribute("item",item);
 
             
 
